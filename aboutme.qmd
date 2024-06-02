@@ -1,7 +1,21 @@
 ---
-title: "About me"
----
+title: "About Me"
+--- 
+![Tim Harrison](Tim.jpeg)
 
-Add some text and a figure describing myself.
+## Personal Profile
 
-For details, see the exercise instructions. 
+I am a devoted husband and father of three, eagerly anticipating the arrival of our fourth child. Our household is also home to two cats and a lovable dog. Prior to pursuing my current academic endeavor, I served in the Marine Corps as an Explosive Ordnance Disposal Technician, culminating my service as a Chief Warrant Officer 2.
+
+## Professional Background
+
+My academic journey led me to specialize in Statistics and Data Science, with a concentration in Actuarial Science, complemented by a certification in Business Analytics from UTSA. Having graduated just last year, I embarked on a fulfilling career path. Following an enriching internship experience at USAA, I was offered a full-time role as a Credit Risk Analyst. My primary focus lies in the realm of auto loans, although I also manage other secured retail banking loans. Day in and day out, I harness the power of SQL within SAS to identify opportunities for optimizing strategies. Additionally, I collaborate closely with Tableau dashboard developers, facilitating seamless communication of business requirements, data query provision, and rigorous QA inspections on the generated Tableau output.
+
+## Personal Interests and Activities
+
+A tidbit about me: my international travels outweigh my domestic adventures within the United States. During my leisure hours, I find solace in maintaining our home, indulging in activities like lawn care, barbecuing, car detailing, and the gratifying task of pressure washing our driveway.
+
+## Additional Resource
+
+For a deeper dive into the distribution of FICO scores within the US, check out this informative video: [Distribution of FICO Scores within the US](https://www.youtube.com/watch?v=xvFZjo5PgG0)
+

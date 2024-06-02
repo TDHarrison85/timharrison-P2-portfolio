@@ -3,10 +3,10 @@ project:
   output-dir: docs
 
 website:
-  title: "YOURNAME Data Analysis Portfolio"
+  title: "Tim Harrison Data Analysis Portfolio"
   navbar:
     left:
-      - text: "About Me"
+      - text: "Personal Info Page"
         file: aboutme.qmd
       - text: "Projects"
         menu:
@@ -20,11 +20,11 @@ website:
             file: tidytuesday-exercise/tidytuesday-exercise.qmd
     right:
       - icon: github 
-        href: URL-TO-THIS-REPOSITORY-HERE        
+        href: https://github.com/TDHarrison85/timharrison-P2-portfolio       
 
 format:
   html:
-    theme: cosmo
+    theme: pulse
     highlight: zenburn
     css: styles.css
     toc: FALSE

@@ -1,10 +1,10 @@
 ---
-title: "My website and data analysis portfolio"
+title: "UTSA MSDA Program"
 ---
 
-# Hello
+# Practicum II 
 
-### And hello again
+### Introduction 
 
 Welcome to **my website** and _data analysis portfolio._ 
 
