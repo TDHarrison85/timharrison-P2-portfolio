@@ -1,7 +1,7 @@
 ---
-title: "Manuscript/Report Template for a Data Analysis Project"
+title: "Data Analysis Project"
 subtitle: ""
-author: Your Name
+author: Timothy Harrison
 date: today
 format:
   html:
