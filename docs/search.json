@@ -42,32 +42,39 @@
     "text": "This folder contains code to do some simple exploratory analysis and statistical analysis on the processed/cleaned data. The code produces a few tables and figures, which are saved in the results folder.\nIt’s the same code done 3 times:\n\nFirst, there is an R script that you can run which does all the computations.\nSecond, there is a Quarto file which contains exactly the same code as the R script.\nThird, my current favorite, is a Quarto file with an approach where the code is pulled in from the R script and run.\n\nThe last version has the advantage of having code in one place for easy writing/debugging, and then being able to pull the code into the Quarto file for a nice combination of text/commentary and code.\nEach way of doing this is a reasonable approach, pick whichever one you prefer or makes the most sense for your setup. Whichever approach you choose, add ample documentation/commentary so you and others can easily understand what’s going on and what is done."
   },
   {
-    "objectID": "starter-analysis-exercise/products/readme.html",
-    "href": "starter-analysis-exercise/products/readme.html",
-    "title": "Tim Harrison Data Analysis Portfolio",
+    "objectID": "starter-analysis-exercise/products/report/Manuscript.html",
+    "href": "starter-analysis-exercise/products/report/Manuscript.html",
+    "title": "Data Analysis Project",
     "section": "",
-    "text": "The folders inside this folder should contain all the products of your project.\nFor a classical academic project, this will be a peer-reviewed manuscript, and should be placed into a manuscript folder.\nFor our case, since we’ll want to put it on the website, we call it a report.\nOften you need a library of references in bibtex format, as well as a CSL style file that determines reference formatting. Since those files might be used by several of the products, I’m placing them in the main products folder. Feel free to re-organize."
+    "text": "The structure below is one possible setup for a data analysis project (including the course project). For a manuscript, adjust as needed. You don’t need to have exactly these sections, but the content covering those sections should be addressed.\nThis uses MS Word as output format. See here for more information. You can switch to other formats, like html or pdf. See the Quarto documentation for other formats."
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "UTSA MSDA Program",
-    "section": "",
-    "text": "Practicum II\n\nIntroduction\nWelcome to my website and data analysis portfolio.\n\nPlease use the Menu Bar above to look around.\nHave fun!\n\nFeel free to change this text any way you want 😁!"
+    "objectID": "starter-analysis-exercise/products/report/Manuscript.html#general-background-information",
+    "href": "starter-analysis-exercise/products/report/Manuscript.html#general-background-information",
+    "title": "Data Analysis Project",
+    "section": "2.1 General Background Information",
+    "text": "2.1 General Background Information\nProvide enough background on your topic that others can understand the why and how of your analysis"
   },
   {
-    "objectID": "tidytuesday-exercise/tidytuesday-exercise.html",
-    "href": "tidytuesday-exercise/tidytuesday-exercise.html",
-    "title": "Tidy Tuesday Exercise",
-    "section": "",
-    "text": "Placeholder file for the future Tidy Tuesday exercise."
+    "objectID": "starter-analysis-exercise/products/report/Manuscript.html#description-of-data-and-data-source",
+    "href": "starter-analysis-exercise/products/report/Manuscript.html#description-of-data-and-data-source",
+    "title": "Data Analysis Project",
+    "section": "2.2 Description of data and data source",
+    "text": "2.2 Description of data and data source\nI am going to create sythinetic data using artificail inteligence software. I will have attributes that are received from Experian to simulate a credit report and customer attributes that I would be able to get from a bank."
   },
   {
-    "objectID": "coding-exercise/coding-exercise.html",
-    "href": "coding-exercise/coding-exercise.html",
-    "title": "R Coding Exercise",
+    "objectID": "starter-analysis-exercise/products/report/Manuscript.html#questionshypotheses-to-be-addressed",
+    "href": "starter-analysis-exercise/products/report/Manuscript.html#questionshypotheses-to-be-addressed",
+    "title": "Data Analysis Project",
+    "section": "2.3 Questions/Hypotheses to be addressed",
+    "text": "2.3 Questions/Hypotheses to be addressed\nI can create a more holistic picture of a customer’s credit worthiness if I factor in data only avaialable through a bank relationship."
+  },
+  {
+    "objectID": "presentation-exercise/presentation-exercise.html",
+    "href": "presentation-exercise/presentation-exercise.html",
+    "title": "Presentation Exercise",
     "section": "",
-    "text": "Placeholder file for the future R coding exercise."
+    "text": "Placeholder file for the future data/results presentation exercise."
   },
   {
     "objectID": "aboutme.html",
@@ -105,11 +112,32 @@
     "text": "Additional Resource\nFor a deeper dive into the distribution of FICO scores within the US, check out this informative video: Distribution of FICO Scores within the US"
   },
   {
-    "objectID": "presentation-exercise/presentation-exercise.html",
-    "href": "presentation-exercise/presentation-exercise.html",
-    "title": "Presentation Exercise",
+    "objectID": "coding-exercise/coding-exercise.html",
+    "href": "coding-exercise/coding-exercise.html",
+    "title": "R Coding Exercise",
     "section": "",
-    "text": "Placeholder file for the future data/results presentation exercise."
+    "text": "Placeholder file for the future R coding exercise."
+  },
+  {
+    "objectID": "tidytuesday-exercise/tidytuesday-exercise.html",
+    "href": "tidytuesday-exercise/tidytuesday-exercise.html",
+    "title": "Tidy Tuesday Exercise",
+    "section": "",
+    "text": "Placeholder file for the future Tidy Tuesday exercise."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "UTSA MSDA Program",
+    "section": "",
+    "text": "Practicum II\n\nIntroduction\nWelcome to my website and data analysis portfolio.\n\nPlease use the Menu Bar above to look around.\nHave fun!\n\nFeel free to change this text any way you want 😁!"
+  },
+  {
+    "objectID": "starter-analysis-exercise/products/readme.html",
+    "href": "starter-analysis-exercise/products/readme.html",
+    "title": "Tim Harrison Data Analysis Portfolio",
+    "section": "",
+    "text": "The folders inside this folder should contain all the products of your project.\nFor a classical academic project, this will be a peer-reviewed manuscript, and should be placed into a manuscript folder.\nFor our case, since we’ll want to put it on the website, we call it a report.\nOften you need a library of references in bibtex format, as well as a CSL style file that determines reference formatting. Since those files might be used by several of the products, I’m placing them in the main products folder. Feel free to re-organize."
   },
   {
     "objectID": "starter-analysis-exercise/products/report/starter-analysis-report.html",
