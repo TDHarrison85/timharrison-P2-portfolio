@@ -52,7 +52,7 @@ I added hair color and BMI.
 
 <!-- # Methods  -->
 
-<!-- _Describe your methods. That should describe the data, the cleaning processes, and the analysis approaches. You might want to provide a shorter description here and all the details in the supplement._ -->
+<!-- _Describe your methods. That should describe the data, the cleaning processes, and the analysis approaches. You might want to provide a shorter description here and  the details in the supplement._ -->
 
 
 <!-- ## Data aquisition -->
