@@ -142,30 +142,16 @@
   {
     "objectID": "starter-analysis-exercise/products/report/starter-analysis-report.html",
     "href": "starter-analysis-exercise/products/report/starter-analysis-report.html",
-    "title": "Data Analysis Project",
+    "title": "Assignment 2",
     "section": "",
-    "text": "The structure below is one possible setup for a data analysis project (including the course project). For a manuscript, adjust as needed. You don’t need to have exactly these sections, but the content covering those sections should be addressed.\nThis uses MS Word as output format. See here for more information. You can switch to other formats, like html or pdf. See the Quarto documentation for other formats."
-  },
-  {
-    "objectID": "starter-analysis-exercise/products/report/starter-analysis-report.html#general-background-information",
-    "href": "starter-analysis-exercise/products/report/starter-analysis-report.html#general-background-information",
-    "title": "Data Analysis Project",
-    "section": "2.1 General Background Information",
-    "text": "2.1 General Background Information\nProvide enough background on your topic that others can understand the why and how of your analysis"
+    "text": "I added hair color and BMI."
   },
   {
     "objectID": "starter-analysis-exercise/products/report/starter-analysis-report.html#description-of-data-and-data-source",
     "href": "starter-analysis-exercise/products/report/starter-analysis-report.html#description-of-data-and-data-source",
-    "title": "Data Analysis Project",
-    "section": "2.2 Description of data and data source",
-    "text": "2.2 Description of data and data source\nI am going to create sythinetic data using artificail inteligence software. I will have attributes that are received from Experian to simulate a credit report and customer attributes that I would be able to get from a bank."
-  },
-  {
-    "objectID": "starter-analysis-exercise/products/report/starter-analysis-report.html#questionshypotheses-to-be-addressed",
-    "href": "starter-analysis-exercise/products/report/starter-analysis-report.html#questionshypotheses-to-be-addressed",
-    "title": "Data Analysis Project",
-    "section": "2.3 Questions/Hypotheses to be addressed",
-    "text": "2.3 Questions/Hypotheses to be addressed\nI can create a more holistic picture of a customer’s credit worthiness if I factor in data only avaialable through a bank relationship."
+    "title": "Assignment 2",
+    "section": "",
+    "text": "I added hair color and BMI."
   },
   {
     "objectID": "starter-analysis-exercise/code/readme.html",

@@ -1,5 +1,5 @@
 ---
-title: "Data Analysis Project"
+title: "Assignment 2 "
 subtitle: ""
 author: Timothy Harrison
 date: today
@@ -12,55 +12,51 @@ bibliography: ../dataanalysis-template-references.bib
 csl: ../apa.csl
 ---
 
-The structure below is one possible setup for a data analysis project (including the course project). For a manuscript, adjust as needed. 
-You don't need to have exactly these sections, but the content covering those sections should be addressed.
+<!-- The structure below is one possible setup for a data analysis project (including the course project). For a manuscript, adjust as needed.  -->
+<!-- You don't need to have exactly these sections, but the content covering those sections should be addressed. -->
 
-This uses MS Word as output format. [See here](https://quarto.org/docs/output-formats/ms-word.html) for more information. You can switch to other formats, like html or pdf. See [the Quarto documentation](https://quarto.org/) for other formats.
-
-
-```{r, echo=FALSE, message=FALSE}
-# load a few R packages
-library(here)
-library(knitr)
-```
+<!-- This uses MS Word as output format. [See here](https://quarto.org/docs/output-formats/ms-word.html) for more information. You can switch to other formats, like html or pdf. See [the Quarto documentation](https://quarto.org/) for other formats. -->
 
 
+<!-- ```{r, echo=FALSE, message=FALSE} -->
+<!-- # load a few R packages -->
+<!-- library(here) -->
+<!-- library(knitr) -->
+<!-- ``` -->
 
-# Summary/Abstract
-When financial institutions want to extend credit they need to ascertain a customer's credit worthiness and probability of repaying the loan. Companies like Experian exist and can provide information that will aide in this decision. To have a more competitive edge banks can assess the credit worthiness of its customer's with this data, but also have access to their bank information. I want to create a way to segment customers that combines information gleaned from Experian data, like a FICO score, and use data only available to the bank to have a more holisitic way to assess credit worthiness.
 
 
-{{< pagebreak >}}
+<!-- # Summary/Abstract -->
+<!-- _Write a summary of your project._ -->
 
 
-# Introduction 
+<!-- {{< pagebreak >}} -->
 
-## General Background Information
-_Provide enough background on your topic that others can understand the why and how of your analysis_ 
+
+<!-- # Introduction  -->
+
+<!-- ## General Background Information -->
+<!-- _Provide enough background on your topic that others can understand the why and how of your analysis_  -->
 
 ## Description of data and data source
-I am going to create sythinetic data using artificail inteligence software. I will have attributes that are received from Experian to simulate a credit report and customer attributes that I would be able to get from a bank.
+I added hair color and BMI.
+<!-- ## Questions/Hypotheses to be addressed -->
+<!-- _State the research questions you plan to answer with this analysis._ -->
 
-## Questions/Hypotheses to be addressed
-I can create a more holistic picture of a customer's credit worthiness if I factor in data only avaialable through a bank relationship.
+<!-- To cite other work (important everywhere, but likely happens first in introduction), make sure your references are in the bibtex file specified in the YAML header above (here `dataanalysis_template_references.bib`) and have the right bibtex key. Then you can include like this: -->
 
-<!-- To cite other work (important everywhere, but likely happens first in -->
-<!-- introduction), make sure your references are in the bibtex file specified in the -->
-<!-- YAML header above (here `dataanalysis_template_references.bib`) and have the -->
-<!-- right bibtex key. Then you can include like this: -->
-<!-- Examples of reproducible research projects can for instance be found in -->
-<!-- [@mckay2020; @mckay2020a] -->
+<!-- Examples of reproducible research projects can for instance be found in [@mckay2020; @mckay2020a] -->
 
-{{< pagebreak >}}
+<!-- {{< pagebreak >}} -->
 
 
-# Methods 
+<!-- # Methods  -->
 
-The data will be synthetically created with AI. I will use summary statistics to get an idea of the data and principle componenet analysis combined with cluster anlaysis to create groups.
+<!-- _Describe your methods. That should describe the data, the cleaning processes, and the analysis approaches. You might want to provide a shorter description here and all the details in the supplement._ -->
 
 
 <!-- ## Data aquisition -->
-<!-- The data will be created. -->
+<!-- _As applicable, explain where and how you got the data. If you directly import the data from an online source, you can combine this section with the next._ -->
 
 
 <!-- ## Data import and cleaning -->
@@ -71,7 +67,7 @@ The data will be synthetically created with AI. I will use summary statistics to
 <!-- _Explain anything related to your statistical analyses._ -->
 
 
-{{< pagebreak >}}
+<!-- {{< pagebreak >}} -->
 
 
 <!-- # Results -->

@@ -9,7 +9,7 @@
 <meta name="author" content="Timothy Harrison">
 <meta name="dcterms.date" content="2024-06-05">
 
-<title>Tim Harrison Data Analysis Portfolio - Data Analysis Project</title>
+<title>Tim Harrison Data Analysis Portfolio - Assignment 2</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -145,7 +145,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Data Analysis Project</h1>
+<h1 class="title">Assignment 2</h1>
 </div>
 
 
@@ -174,45 +174,35 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>The structure below is one possible setup for a data analysis project (including the course project). For a manuscript, adjust as needed. You don’t need to have exactly these sections, but the content covering those sections should be addressed.</p>
-<p>This uses MS Word as output format. <a href="https://quarto.org/docs/output-formats/ms-word.html">See here</a> for more information. You can switch to other formats, like html or pdf. See <a href="https://quarto.org/">the Quarto documentation</a> for other formats.</p>
-<section id="summaryabstract" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Summary/Abstract</h1>
-<p>When financial institutions want to extend credit they need to ascertain a customer’s credit worthiness and probability of repaying the loan. Companies like Experian exist and can provide information that will aide in this decision. To have a more competitive edge banks can assess the credit worthiness of its customer’s with this data, but also have access to their bank information. I want to create a way to segment customers that combines information gleaned from Experian data, like a FICO score, and use data only available to the bank to have a more holisitic way to assess credit worthiness.</p>
-<div style="page-break-after: always;"></div>
-</section>
-<section id="introduction" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Introduction</h1>
-<section id="general-background-information" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="general-background-information"><span class="header-section-number">2.1</span> General Background Information</h2>
-<p><em>Provide enough background on your topic that others can understand the why and how of your analysis</em></p>
-</section>
-<section id="description-of-data-and-data-source" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="description-of-data-and-data-source"><span class="header-section-number">2.2</span> Description of data and data source</h2>
-<p>I am going to create sythinetic data using artificail inteligence software. I will have attributes that are received from Experian to simulate a credit report and customer attributes that I would be able to get from a bank.</p>
-</section>
-<section id="questionshypotheses-to-be-addressed" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="questionshypotheses-to-be-addressed"><span class="header-section-number">2.3</span> Questions/Hypotheses to be addressed</h2>
-<p>I can create a more holistic picture of a customer’s credit worthiness if I factor in data only avaialable through a bank relationship.</p>
-<!-- To cite other work (important everywhere, but likely happens first in -->
-<!-- introduction), make sure your references are in the bibtex file specified in the -->
-<!-- YAML header above (here `dataanalysis_template_references.bib`) and have the -->
-<!-- right bibtex key. Then you can include like this: -->
-<!-- Examples of reproducible research projects can for instance be found in -->
-<!-- [@mckay2020; @mckay2020a] -->
-<div style="page-break-after: always;"></div>
-</section>
-</section>
-<section id="methods" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Methods</h1>
-<p>The data will be synthetically created with AI. I will use summary statistics to get an idea of the data and principle componenet analysis combined with cluster anlaysis to create groups.</p>
+<!-- The structure below is one possible setup for a data analysis project (including the course project). For a manuscript, adjust as needed.  -->
+<!-- You don't need to have exactly these sections, but the content covering those sections should be addressed. -->
+<!-- This uses MS Word as output format. [See here](https://quarto.org/docs/output-formats/ms-word.html) for more information. You can switch to other formats, like html or pdf. See [the Quarto documentation](https://quarto.org/) for other formats. -->
+<!-- ```{r, echo=FALSE, message=FALSE} -->
+<!-- # load a few R packages -->
+<!-- library(here) -->
+<!-- library(knitr) -->
+<!-- ``` -->
+<!-- # Summary/Abstract -->
+<!-- _Write a summary of your project._ -->
+<!--  -->
+<!-- # Introduction  -->
+<!-- ## General Background Information -->
+<!-- _Provide enough background on your topic that others can understand the why and how of your analysis_  -->
+<section id="description-of-data-and-data-source" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="description-of-data-and-data-source"><span class="header-section-number">1</span> Description of data and data source</h2>
+<p>I added hair color and BMI. <!-- ## Questions/Hypotheses to be addressed --> <!-- _State the research questions you plan to answer with this analysis._ --></p>
+<!-- To cite other work (important everywhere, but likely happens first in introduction), make sure your references are in the bibtex file specified in the YAML header above (here `dataanalysis_template_references.bib`) and have the right bibtex key. Then you can include like this: -->
+<!-- Examples of reproducible research projects can for instance be found in [@mckay2020; @mckay2020a] -->
+<!--  -->
+<!-- # Methods  -->
+<!-- _Describe your methods. That should describe the data, the cleaning processes, and the analysis approaches. You might want to provide a shorter description here and all the details in the supplement._ -->
 <!-- ## Data aquisition -->
-<!-- The data will be created. -->
+<!-- _As applicable, explain where and how you got the data. If you directly import the data from an online source, you can combine this section with the next._ -->
 <!-- ## Data import and cleaning -->
 <!-- _Write code that reads in the file and cleans it so it's ready for analysis. Since this will be fairly long code for most datasets, it might be a good idea to have it in one or several R scripts. If that is the case, explain here briefly what kind of cleaning/processing you do, and provide more details and well documented code somewhere (e.g. as supplement in a paper). All materials, including files that contain code, should be commented well so everyone can follow along._ -->
 <!-- ## Statistical analysis -->
 <!-- _Explain anything related to your statistical analyses._ -->
-<div style="page-break-after: always;"></div>
+<!--  -->
 <!-- # Results -->
 <!-- ## Exploratory/Descriptive analysis -->
 <!-- _Use a combination of text/tables/figures to explore and describe your data. Show the most important descriptive results here. Additional ones should go in the supplement. Even more can be in the R and Quarto files that are part of your project._ -->
