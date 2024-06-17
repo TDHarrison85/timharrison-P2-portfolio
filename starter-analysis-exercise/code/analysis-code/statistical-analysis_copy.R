@@ -11,7 +11,7 @@ library(here) #for data loading/saving
 
 #path to data
 #note the use of the here() package and not absolute paths
-data_location <- here::here("starter-analysis-exercise","data","processed-data","processeddata2.rds")
+data_location <- here::here("starter-analysis-exercise","data","processed-data","processeddata.rds")
 
 #load data. 
 mydata <- readRDS(data_location)
@@ -57,8 +57,7 @@ saveRDS(lmtable2, file = table_file2)
 #### Third model fit
 # fit linear model using height as outcome, hair and BMI as predictor
 
-lmfit3 <- lm(Height ~ Hair + BMI, mydata) 
-#lmfit3 <- lm(Height ~ Hair + BMI, mydata)  
+lmfit3 <- lm(Height ~ Hair + BMI, mydata)  
 
 # place results from fit into a data frame with the tidy function
 lmtable3 <- broom::tidy(lmfit3)

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
+<meta name="generator" content="quarto-1.4.555">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -273,15 +273,15 @@ Attaching package: 'dplyr'</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 14
 Columns: 5
-$ Height       &lt;chr&gt; "180", "175", "sixty", "178", "192", "6", "156", "166", "…
-$ Weight       &lt;dbl&gt; 80, 70, 60, 76, 90, 55, 90, 110, 54, 7000, NA, 45, 55, 50
-$ Gender       &lt;chr&gt; "M", "O", "F", "F", "NA", "F", "O", "M", "N", "M", "F", "…
-$ `Hair Color` &lt;chr&gt; "Red", "Brown", "Brown", "Blonde", "Grey", "Red", "Brown"…
-$ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20, 0.1…</code></pre>
+$ Height &lt;chr&gt; "180", "175", "sixty", "178", "192", "6", "156", "166", "155", …
+$ Weight &lt;dbl&gt; 80, 70, 60, 76, 90, 55, 90, 110, 54, 7000, NA, 45, 55, 50
+$ Gender &lt;chr&gt; "M", "O", "F", "F", "NA", "F", "O", "M", "N", "M", "F", "F", "M…
+$ Hair   &lt;chr&gt; "Red", "Brown", "Brown", "Blonde", "Grey", "Red", "Brown", "Bro…
+$ BMI    &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20, 0.10, 0.0…</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(rawdata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    Height              Weight          Gender           Hair Color       
+<pre><code>    Height              Weight          Gender              Hair          
  Length:14          Min.   :  45.0   Length:14          Length:14         
  Class :character   1st Qu.:  55.0   Class :character   Class :character  
  Mode  :character   Median :  70.0   Mode  :character   Mode  :character  
@@ -301,18 +301,18 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rawdata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 5
-  Height Weight Gender `Hair Color`   BMI
-  &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;        &lt;dbl&gt;
-1 180        80 M      Red           0.2 
-2 175        70 O      Brown         0.2 
-3 sixty      60 F      Brown         0.2 
-4 178        76 F      Blonde        0.1 
-5 192        90 NA     Grey          0.08
-6 6          55 F      Red           0.09</code></pre>
+  Height Weight Gender Hair     BMI
+  &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;dbl&gt;
+1 180        80 M      Red     0.2 
+2 175        70 O      Brown   0.2 
+3 sixty      60 F      Brown   0.2 
+4 178        76 F      Blonde  0.1 
+5 192        90 NA     Grey    0.08
+6 6          55 F      Red     0.09</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>skimr<span class="sc">::</span><span class="fu">skim</span>(rawdata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <caption>Data summary</caption>
 <tbody>
 <tr class="odd">
@@ -354,7 +354,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 </tbody>
 </table>
 <p><strong>Variable type: character</strong></p>
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 19%">
 <col style="width: 13%">
@@ -399,7 +399,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Hair Color</td>
+<td style="text-align: left;">Hair</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">3</td>
@@ -411,7 +411,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 </tbody>
 </table>
 <p><strong>Variable type: numeric</strong></p>
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 15%">
 <col style="width: 11%">
@@ -481,7 +481,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">Height =</span> <span class="fu">as.numeric</span>(Height))</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>skimr<span class="sc">::</span><span class="fu">skim</span>(d1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <caption>Data summary</caption>
 <tbody>
 <tr class="odd">
@@ -523,7 +523,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 </tbody>
 </table>
 <p><strong>Variable type: character</strong></p>
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 19%">
 <col style="width: 13%">
@@ -558,7 +558,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Hair Color</td>
+<td style="text-align: left;">Hair</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">3</td>
@@ -570,7 +570,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 </tbody>
 </table>
 <p><strong>Variable type: numeric</strong></p>
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 15%">
 <col style="width: 10%">
@@ -656,7 +656,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> d1 <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">mutate</span>( <span class="at">Height =</span> <span class="fu">replace</span>(Height, Height<span class="sc">==</span><span class="st">"6"</span>,<span class="fu">round</span>(<span class="dv">6</span><span class="sc">*</span><span class="fl">30.48</span>,<span class="dv">0</span>)) )</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>skimr<span class="sc">::</span><span class="fu">skim</span>(d2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <caption>Data summary</caption>
 <tbody>
 <tr class="odd">
@@ -698,7 +698,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 </tbody>
 </table>
 <p><strong>Variable type: character</strong></p>
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 19%">
 <col style="width: 13%">
@@ -733,7 +733,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Hair Color</td>
+<td style="text-align: left;">Hair</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">3</td>
@@ -745,7 +745,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 </tbody>
 </table>
 <p><strong>Variable type: numeric</strong></p>
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 15%">
 <col style="width: 10%">
@@ -824,7 +824,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>d3 <span class="ot">&lt;-</span> d2 <span class="sc">%&gt;%</span>  dplyr<span class="sc">::</span><span class="fu">filter</span>(Weight <span class="sc">!=</span> <span class="dv">7000</span>) <span class="sc">%&gt;%</span> tidyr<span class="sc">::</span><span class="fu">drop_na</span>()</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>skimr<span class="sc">::</span><span class="fu">skim</span>(d3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <caption>Data summary</caption>
 <tbody>
 <tr class="odd">
@@ -866,7 +866,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 </tbody>
 </table>
 <p><strong>Variable type: character</strong></p>
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 19%">
 <col style="width: 13%">
@@ -901,7 +901,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Hair Color</td>
+<td style="text-align: left;">Hair</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">3</td>
@@ -913,7 +913,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 </tbody>
 </table>
 <p><strong>Variable type: numeric</strong></p>
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 15%">
 <col style="width: 11%">
@@ -991,7 +991,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>d3<span class="sc">$</span>Gender <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(d3<span class="sc">$</span>Gender)  </span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>skimr<span class="sc">::</span><span class="fu">skim</span>(d3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <caption>Data summary</caption>
 <tbody>
 <tr class="odd">
@@ -1037,7 +1037,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 </tbody>
 </table>
 <p><strong>Variable type: character</strong></p>
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 19%">
 <col style="width: 13%">
@@ -1062,7 +1062,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Hair Color</td>
+<td style="text-align: left;">Hair</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">3</td>
@@ -1074,7 +1074,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 </tbody>
 </table>
 <p><strong>Variable type: factor</strong></p>
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 17%">
 <col style="width: 12%">
@@ -1105,7 +1105,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 </tbody>
 </table>
 <p><strong>Variable type: numeric</strong></p>
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 15%">
 <col style="width: 11%">
@@ -1183,7 +1183,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>d4 <span class="ot">&lt;-</span> d3 <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>( <span class="sc">!</span>(Gender <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"NA"</span>,<span class="st">"N"</span>)) ) <span class="sc">%&gt;%</span> <span class="fu">droplevels</span>()</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>skimr<span class="sc">::</span><span class="fu">skim</span>(d4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <caption>Data summary</caption>
 <tbody>
 <tr class="odd">
@@ -1229,7 +1229,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 </tbody>
 </table>
 <p><strong>Variable type: character</strong></p>
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 19%">
 <col style="width: 13%">
@@ -1254,7 +1254,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Hair Color</td>
+<td style="text-align: left;">Hair</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">3</td>
@@ -1266,7 +1266,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 </tbody>
 </table>
 <p><strong>Variable type: factor</strong></p>
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 19%">
 <col style="width: 13%">
@@ -1297,7 +1297,7 @@ $ BMI          &lt;dbl&gt; 0.20, 0.20, 0.20, 0.10, 0.08, 0.09, 0.20, 0.20, 0.20,
 </tbody>
 </table>
 <p><strong>Variable type: numeric</strong></p>
-<table class="table table-sm table-striped small">
+<table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 15%">
 <col style="width: 11%">

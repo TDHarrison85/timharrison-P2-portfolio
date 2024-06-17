@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
+<meta name="generator" content="quarto-1.4.555">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Timothy Harrison">
-<meta name="dcterms.date" content="2024-06-05">
+<meta name="author" content="Timothy Harrison with contribution by Holly Millazo.">
+<meta name="dcterms.date" content="2024-06-16">
 
 <title>Tim Harrison Data Analysis Portfolio - Assignment 2</title>
 <style>
@@ -175,14 +175,14 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Timothy Harrison </p>
+             <p>Timothy Harrison with contribution by Holly Millazo. </p>
           </div>
   </div>
     
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 5, 2024</p>
+      <p class="date">June 16, 2024</p>
     </div>
   </div>
   
@@ -217,7 +217,7 @@ div.csl-indent {
 </section>
 <section id="methods" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Methods</h1>
-<p><em>Describe your methods. That should describe the data, the cleaning processes, and the analysis approaches. You might want to provide a shorter description here and all the details in the supplement.</em></p>
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; Updated upstream <!-- _Describe your methods. That should describe the data, the cleaning processes, and the analysis approaches. You might want to provide a shorter description here and  the details in the supplement._ --> ======= <em>Describe your methods. That should describe the data, the cleaning processes, and the analysis approaches. You might want to provide a shorter description here and all the details in the supplement.</em> &gt;&gt;&gt;&gt;&gt;&gt;&gt; Stashed changes</p>
 <section id="data-aquisition" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="data-aquisition"><span class="header-section-number">3.1</span> Data aquisition</h2>
 <p><em>As applicable, explain where and how you got the data. If you directly import the data from an online source, you can combine this section with the next.</em></p>
@@ -247,28 +247,23 @@ Table&nbsp;1: Data summary table.
 </figcaption>
 <div aria-describedby="tbl-summarytable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
-<col style="width: 3%">
 <col style="width: 5%">
-<col style="width: 3%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 6%">
 <col style="width: 7%">
 <col style="width: 5%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 8%">
+<col style="width: 9%">
+<col style="width: 6%">
+<col style="width: 5%">
 <col style="width: 5%">
 <col style="width: 6%">
-<col style="width: 4%">
-<col style="width: 3%">
-<col style="width: 3%">
-<col style="width: 4%">
-<col style="width: 4%">
-<col style="width: 4%">
-<col style="width: 4%">
-<col style="width: 4%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -276,11 +271,6 @@ Table&nbsp;1: Data summary table.
 <th style="text-align: left;">skim_variable</th>
 <th style="text-align: right;">n_missing</th>
 <th style="text-align: right;">complete_rate</th>
-<th style="text-align: right;">character.min</th>
-<th style="text-align: right;">character.max</th>
-<th style="text-align: right;">character.empty</th>
-<th style="text-align: right;">character.n_unique</th>
-<th style="text-align: right;">character.whitespace</th>
 <th style="text-align: left;">factor.ordered</th>
 <th style="text-align: right;">factor.n_unique</th>
 <th style="text-align: left;">factor.top_counts</th>
@@ -296,37 +286,10 @@ Table&nbsp;1: Data summary table.
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">character</td>
-<td style="text-align: left;">Hair Color</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: left;">NA</td>
-</tr>
-<tr class="even">
 <td style="text-align: left;">factor</td>
 <td style="text-align: left;">Gender</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
 <td style="text-align: left;">FALSE</td>
 <td style="text-align: right;">3</td>
 <td style="text-align: left;">M: 4, F: 3, O: 2</td>
@@ -339,71 +302,39 @@ Table&nbsp;1: Data summary table.
 <td style="text-align: right;">NA</td>
 <td style="text-align: left;">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">numeric</td>
 <td style="text-align: left;">Height</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
 <td style="text-align: left;">NA</td>
 <td style="text-align: right;">NA</td>
 <td style="text-align: left;">NA</td>
-<td style="text-align: right;">165.6666667</td>
-<td style="text-align: right;">15.9765453</td>
-<td style="text-align: right;">133.00</td>
-<td style="text-align: right;">156.0</td>
-<td style="text-align: right;">166.0</td>
-<td style="text-align: right;">178.0</td>
-<td style="text-align: right;">183.00</td>
+<td style="text-align: right;">165.66667</td>
+<td style="text-align: right;">15.97655</td>
+<td style="text-align: right;">133</td>
+<td style="text-align: right;">156</td>
+<td style="text-align: right;">166</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">183</td>
 <td style="text-align: left;">▂▁▃▃▇</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">numeric</td>
 <td style="text-align: left;">Weight</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
 <td style="text-align: left;">NA</td>
 <td style="text-align: right;">NA</td>
 <td style="text-align: left;">NA</td>
-<td style="text-align: right;">70.1111111</td>
-<td style="text-align: right;">21.2452609</td>
-<td style="text-align: right;">45.00</td>
-<td style="text-align: right;">55.0</td>
-<td style="text-align: right;">70.0</td>
-<td style="text-align: right;">80.0</td>
-<td style="text-align: right;">110.00</td>
+<td style="text-align: right;">70.11111</td>
+<td style="text-align: right;">21.24526</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">55</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">110</td>
 <td style="text-align: left;">▇▂▃▂▂</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">numeric</td>
-<td style="text-align: left;">BMI</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0.2066667</td>
-<td style="text-align: right;">0.1401785</td>
-<td style="text-align: right;">0.09</td>
-<td style="text-align: right;">0.1</td>
-<td style="text-align: right;">0.2</td>
-<td style="text-align: right;">0.2</td>
-<td style="text-align: right;">0.55</td>
-<td style="text-align: left;">▅▇▁▁▂</td>
 </tr>
 </tbody>
 </table>
@@ -444,7 +375,7 @@ Table&nbsp;2: Linear model fit table.
 </figcaption>
 <div aria-describedby="tbl-resulttable2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">term</th>
@@ -490,6 +421,50 @@ Table&nbsp;2: Linear model fit table.
 </figure>
 </div>
 </div>
+<p>Example <strong>?@tbl-resulttable3</strong> shows a summary of a second linear model fit.</p>
+<p>::: {#tbl-resulttable3 .cell tbl-cap=’ 2nd Linear model fit table.’} ::: {.cell-output-display}</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">estimate</th>
+<th style="text-align: right;">std.error</th>
+<th style="text-align: right;">statistic</th>
+<th style="text-align: right;">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">172.769240</td>
+<td style="text-align: right;">18.84399</td>
+<td style="text-align: right;">9.1683981</td>
+<td style="text-align: right;">0.0002588</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HairBrown</td>
+<td style="text-align: right;">-9.736809</td>
+<td style="text-align: right;">14.89645</td>
+<td style="text-align: right;">-0.6536329</td>
+<td style="text-align: right;">0.5422103</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HairRed</td>
+<td style="text-align: right;">11.750882</td>
+<td style="text-align: right;">18.04451</td>
+<td style="text-align: right;">0.6512166</td>
+<td style="text-align: right;">0.5436460</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BMI</td>
+<td style="text-align: right;">-20.828432</td>
+<td style="text-align: right;">46.37174</td>
+<td style="text-align: right;">-0.4491622</td>
+<td style="text-align: right;">0.6721139</td>
+</tr>
+</tbody>
+</table>
+<p>::: :::</p>
 <div style="page-break-after: always;"></div>
 </section>
 </section>

@@ -1,7 +1,7 @@
 ---
 title: "Assignment 2 "
 subtitle: ""
-author: Timothy Harrison
+author: Timothy Harrison with contribution by Holly Millazo.
 date: today
 format:
   html:
@@ -122,6 +122,16 @@ Example @tbl-resulttable2 shows a summary of a linear model fit.
 #| echo: FALSE
 resulttable2 = readRDS(here("starter-analysis-exercise","results","tables-files","resulttable2.rds"))
 knitr::kable(resulttable2)
+```
+
+
+Example @tbl-resulttable3 shows a summary of a second linear model fit.
+```{r}
+#| label: tbl-resulttable3
+#| tbl-cap: " 2nd Linear model fit table."
+#| echo: FALSE
+resulttable3 = readRDS(here("starter-analysis-exercise","results","tables-files","resulttable3.rds"))
+knitr::kable(resulttable3)
 ```
 
 
