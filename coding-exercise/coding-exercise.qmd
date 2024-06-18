@@ -3,7 +3,7 @@ title: "R Coding Exercise"
 ---
 
 ```{r}
-
+ 
 library("dslabs")
 #look at help file for gapminder data
 help(gapminder)

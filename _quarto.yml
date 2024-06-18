@@ -29,6 +29,6 @@ format:
     theme: pulse
     highlight: zenburn
     css: styles.css
-    toc: FALSE
+    toc: FALSE 
 
 
