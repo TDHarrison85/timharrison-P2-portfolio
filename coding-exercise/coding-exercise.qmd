@@ -2,4 +2,78 @@
 title: "R Coding Exercise"
 ---
 
-Placeholder file for the future R coding exercise.
+```{r}
+
+library("dslabs")
+#look at help file for gapminder data
+help(gapminder)
+
+#get an overview of data structure
+str(gapminder)
+
+#get a summary of data
+summary(gapminder)
+    
+
+#determine the type of object gapminder is
+class(gapminder)
+
+
+# Assign only African countries to a new object/variable called africadata
+africadata <- subset(gapminder, continent == "Africa")
+
+# Run str and summary on the new object
+str(africadata)
+summary(africadata)
+
+# Create two new objects with selected columns from africadata
+africadata_subset1 <- africadata[, c("infant_mortality", "life_expectancy")]
+africadata_subset2 <- africadata[, c("population", "life_expectancy")]
+
+# Run str and summary on both new objects
+str(africadata_subset1)
+summary(africadata_subset1)
+str(africadata_subset2)
+summary(africadata_subset2)
+
+# Plotting
+# Plot 1: Life expectancy vs. Infant mortality
+plot(africadata_subset1$infant_mortality, africadata_subset1$life_expectancy,
+     xlab = "Infant Mortality", ylab = "Life Expectancy",
+     main = "Life Expectancy vs. Infant Mortality")
+
+# Plot 2: Life expectancy vs. Population (log scale on x-axis)
+plot(africadata_subset2$population, africadata_subset2$life_expectancy,
+     xlab = "Population", ylab = "Life Expectancy",
+     main = "Life Expectancy vs. Population (log scale)",
+     log = "x")
+
+# More data processing
+# Extract data for the year 2000 from africadata
+africadata_2000 <- subset(africadata, year == 2000)
+
+# Check structure and summary of africadata_2000
+str(africadata_2000)
+summary(africadata_2000)
+
+# More plotting for the year 2000 data
+# Repeat plots for 2000 data
+plot(africadata_2000$infant_mortality, africadata_2000$life_expectancy,
+     xlab = "Infant Mortality", ylab = "Life Expectancy",
+     main = "Life Expectancy vs. Infant Mortality (Year 2000)")
+
+plot(africadata_2000$population, africadata_2000$life_expectancy,
+     xlab = "Population", ylab = "Life Expectancy",
+     main = "Life Expectancy vs. Population (log scale, Year 2000)",
+     log = "x")
+
+# Simple model fits
+# Fit 1: Life expectancy ~ Infant mortality
+fit1 <- lm(life_expectancy ~ infant_mortality, data = africadata_2000)
+summary(fit1)
+
+# Fit 2: Life expectancy ~ Population
+fit2 <- lm(life_expectancy ~ population, data = africadata_2000)
+summary(fit2)
+
+```
