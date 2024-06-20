@@ -5,6 +5,8 @@ title: "R Coding Exercise"
 ```{r}
  
 library("dslabs")
+library(tidyverse)
+
 #look at help file for gapminder data
 help(gapminder)
 
@@ -74,6 +76,57 @@ summary(fit1)
 
 # Fit 2: Life expectancy ~ Population
 fit2 <- lm(life_expectancy ~ population, data = africadata_2000)
+summary(fit2)
+
+
+#Contribution from Vinayak Revisanker
+
+data("mice_weights") 
+
+str(mice_weights)
+summary(mice_weights)
+
+
+mice_liter1_data <- subset(mice_weights, litter == 1)
+
+
+# Run str and summary on texasdata
+str(mice_liter1_data)
+summary(mice_liter1_data)
+
+
+# Create  new objects with selected columns from mice_liter1_data_subset1 and mice_liter1_data_subset2
+mice_liter1_data_subset1 <- mice_liter1_data[, c("sex", "bone_density")]
+mice_liter1_data_subset2 <- mice_liter1_data[, c("diet", "body_weight")]
+# Run str and summary on both new objects
+str(mice_liter1_data_subset1)
+summary(mice_liter1_data_subset1)
+
+str(mice_liter1_data_subset2)
+summary(mice_liter1_data_subset2)
+
+
+# Plotting
+# Plot 1: sex vs. bone_density
+plot(mice_liter1_data_subset1$sex, mice_liter1_data_subset1$bone_density,
+     xlab = "sex", ylab = "bone_density",
+     main = "Gender and Bone density")
+
+# Plot 2: Life expectancy vs. Population (log scale on x-axis)
+plot(mice_liter1_data_subset2$diet, mice_liter1_data_subset2$body_weight,
+     xlab = "diet", ylab = "weight",
+     main = "Diet and Weight ",
+     log = "x")
+
+
+
+# Simple model fits
+# Fit 1: body_weight ~ percent_fat
+fit1 <- lm(body_weight ~ percent_fat, data = mice_liter1_data)
+summary(fit1)
+
+# Fit 2: body_weight ~ bone_density
+fit2 <- lm(body_weight ~ bone_density, data = mice_liter1_data)
 summary(fit2)
 
 ```
