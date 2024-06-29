@@ -12,6 +12,8 @@ website:
         menu:
           - text: "Data Analysis Project"
             file: starter-analysis-exercise/products/report/Manuscript.qmd
+          - text: "Synthetic Data Project"
+            file: starter-analysis-exercise/products/report/Synth_Data.qmd
           - text: "Starter Analysis Exercise"
             file: starter-analysis-exercise/products/report/starter-analysis-report.qmd
           - text: "R Coding Exercise"
