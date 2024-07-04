@@ -1,0 +1,121 @@
+---
+title: "CDCDATA-Exercise"
+author: "Tim Harrison"
+editor: visual
+---
+
+```{r}
+# Load necessary libraries
+library(tidyverse)
+
+# Read the CSV file
+stroke <- read.csv("Stroke.csv")
+
+# Removing columns 11, 12, 17, 18, and 19 to clean the data and make it more useful for the exercise
+stroke <- stroke %>% select(-c(Data_Value_Footnote_Symbol, Data_Value_Footnote, TopicID, LocationID, Location.1))
+#only keeping state level data
+stroke <- stroke %>% filter(GeographicLevel %in% c("State"))
+
+# Verify the changes
+colnames(stroke)
+
+# View the first few rows to check the result
+head(stroke)
+
+# Unique values in column 4 (GeographicLevel)
+unique_geographic_level <- unique(stroke$GeographicLevel)
+print(unique_geographic_level)
+
+# Unique values in column 5 (DataSource)
+unique_data_source <- unique(stroke$DataSource)
+print(unique_data_source)
+
+# Unique values in column 6 (Class)
+unique_class <- unique(stroke$Class)
+print(unique_class)
+
+# Unique values in column 7 (Topic)
+unique_topic <- unique(stroke$Topic)
+print(unique_topic)
+
+# Unique values in column 9 (Data_Value_Unit)
+unique_data_value_unit <- unique(stroke$Data_Value_Unit)
+print(unique_data_value_unit)
+
+# Unique values in column 10 (Data_Value_Type)
+unique_data_value_type <- unique(stroke$Data_Value_Type)
+print(unique_data_value_type)
+
+# Unique values in column 14 (Stratification1)
+unique_stratification1 <- unique(stroke$Stratification1)
+print(unique_stratification1)
+
+# Unique values in column 16 (Stratification2)
+unique_stratification2 <- unique(stroke$Stratification2)
+print(unique_stratification2)
+
+# GeographicLevel
+geo_level_summary <- stroke %>%
+  group_by(GeographicLevel) %>%
+  summarise(count = n(), percentage = (n() / nrow(stroke)) * 100)
+print(geo_level_summary)
+
+# DataSource
+data_source_summary <- stroke %>%
+  group_by(DataSource) %>%
+  summarise(count = n(), percentage = (n() / nrow(stroke)) * 100)
+print(data_source_summary)
+
+# Class
+class_summary <- stroke %>%
+  group_by(Class) %>%
+  summarise(count = n(), percentage = (n() / nrow(stroke)) * 100)
+print(class_summary)
+
+# Topic
+topic_summary <- stroke %>%
+  group_by(Topic) %>%
+  summarise(count = n(), percentage = (n() / nrow(stroke)) * 100)
+print(topic_summary)
+
+# Data_Value_Unit
+data_value_unit_summary <- stroke %>%
+  group_by(Data_Value_Unit) %>%
+  summarise(count = n(), percentage = (n() / nrow(stroke)) * 100)
+print(data_value_unit_summary)
+
+# Data_Value_Type
+data_value_type_summary <- stroke %>%
+  group_by(Data_Value_Type) %>%
+  summarise(count = n(), percentage = (n() / nrow(stroke)) * 100)
+print(data_value_type_summary)
+
+# StratificationCategory1
+strat_cat1_summary <- stroke %>%
+  group_by(Stratification1) %>%
+  summarise(count = n(), percentage = (n() / nrow(stroke)) * 100)
+print(strat_cat1_summary)
+
+# StratificationCategory2
+strat_cat2_summary <- stroke %>%
+  group_by(Stratification2) %>%
+  summarise(count = n(), percentage = (n() / nrow(stroke)) * 100)
+print(strat_cat2_summary)
+
+# Summary statistics for Data_Value
+data_value_summary <- stroke %>%
+  summarise(mean = mean(Data_Value, na.rm = TRUE), 
+            sd = sd(Data_Value, na.rm = TRUE), 
+            min = min(Data_Value, na.rm = TRUE), 
+            max = max(Data_Value, na.rm = TRUE))
+print(data_value_summary)
+
+# Plotting the distribution of Data_Value
+ggplot(stroke, aes(x = Data_Value)) +
+  geom_histogram(binwidth = 1, fill = 'blue', color = 'black') +
+  labs(title = 'Distribution of Data_Value', x = 'Data_Value', y = 'Frequency')
+
+```
+
+```         
+```
