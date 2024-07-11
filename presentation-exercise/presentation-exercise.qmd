@@ -2,4 +2,105 @@
 title: "Presentation Exercise"
 ---
 
-Placeholder file for the future data/results presentation exercise.
+# Original Graph
+
+I sourced the original graph from FiveThirtyEight's 2018 Best - And Weirdest - Charts of 2018.
+
+<https://fivethirtyeight.com/features/the-45-best-and-weirdest-charts-we-made-in-2018/>
+
+![](orig.png)
+
+# Code Generating New Chart
+
+```{r}
+# Load necessary libraries
+library(ggplot2)
+library(gridExtra)
+library(grid)
+
+
+
+# Create the data frame (example data, replace with your actual data)
+data <- data.frame(
+  Year = rep(2004:2018, 4),
+  Sport = rep(c("Curling", "Figure skating", "Luge", "Ski jumping"), each = 15),
+  SearchIndex = c(
+    # Example data for each sport
+    runif(15, min = 0, max = 1),  # Curling
+    runif(15, min = 0, max = 1),  # Figure skating
+    runif(15, min = 0, max = 1),  # Luge
+    runif(15, min = 0, max = 1)   # Ski jumping
+  )
+)
+
+# Create individual plots
+p1 <- ggplot(subset(data, Sport == "Curling"), aes(x = Year, y = SearchIndex)) +
+  geom_line(color = "red") +
+  labs(title = "Curling", x = NULL, y = NULL) +
+  theme_minimal()
+
+p2 <- ggplot(subset(data, Sport == "Figure skating"), aes(x = Year, y = SearchIndex)) +
+  geom_line(color = "green") +
+  labs(title = "Figure skating", x = NULL, y = NULL) +
+  theme_minimal()
+
+p3 <- ggplot(subset(data, Sport == "Luge"), aes(x = Year, y = SearchIndex)) +
+  geom_line(color = "cyan") +
+  labs(title = "Luge", x = NULL, y = NULL) +
+  theme_minimal() +
+  annotate("text", x = 2010, y = max(subset(data, Sport == "Luge")$SearchIndex),
+           label = "Georgian luger dies\nat 2010 Vancouver Games", size = 3, hjust = -0.1)
+
+p4 <- ggplot(subset(data, Sport == "Ski jumping"), aes(x = Year, y = SearchIndex)) +
+  geom_line(color = "purple") +
+  labs(title = "Ski jumping", x = NULL, y = NULL) +
+  theme_minimal()
+
+# Arrange the plots in a 2x2 grid
+grid.arrange(
+  p1, p2, p3, p4,
+  ncol = 2,
+  top = textGrob("Every four years, Americans get really interested in curling",
+                 gp = gpar(fontsize = 16, fontface = "bold")),
+  bottom = textGrob("Monthly U.S. Google Trends search-index data for selected Olympic sports, 2004-18",
+                    gp = gpar(fontsize = 10))
+)
+
+# Save the plot
+ggsave("olympic_sports_trends.png", width = 10, height = 8)
+
+```
+
+# Table
+
+```{r}
+library(readr)
+library(knitr)
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+head(data)
+# Load the data with correct delimiter
+data2 <- read_csv("multiTimeline.csv", col_names = TRUE)
+
+# Rename columns for easier access
+colnames(data2) <- c("Month", "Curling", "Nordic_combined", "Biathlon", "Luge")
+
+# Convert the 'Month' column to Date type
+data2$Month <- as.Date(data2$Month, format = "%Y-%m")
+
+# Reshape the data for printing
+data_long <- data2 %>%
+  gather(key = "Sport", value = "Search_Interest", -Month) %>%
+  mutate(Year = as.integer(format(Month, "%Y"))) %>%
+  select(Year, Sport, Search_Interest) %>%
+  arrange(Year, Sport)
+
+# Print the first few rows as a table
+kable(head(data_long), caption = "First few rows of the dataset")
+
+```
+
+# AI Prompts
+
+I'm having trouble getting the AI to print out the full prompt. Essentially I just put a picture of the image in the chat and it produced a graph. Then I pulled in the actual data and had the AI pull from the data file to create the graph. The code it generated is above. It didn't work perfectly, but it's interesting how close it got with how little effort was involved.

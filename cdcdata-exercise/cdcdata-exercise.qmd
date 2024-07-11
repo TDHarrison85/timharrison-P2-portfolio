@@ -117,15 +117,15 @@ ggplot(stroke, aes(x = Data_Value)) +
 
 ```
 
-
-
-# This section is contributed by Brody Johnson. 
+# This section is contributed by Brody Johnson.
 
 Summary stats of the variable "data_value" in the original data set.
+
 ```{r}
 data_value_summary
 ```
-Creating the synthetic data set. All in all, the summary statistics look appear to be very similar to that of the original data. 
+
+Creating the synthetic data set. All in all, the summary statistics look appear to be very similar to that of the original data.
 
 ```{r}
 set.seed(200)
@@ -138,13 +138,13 @@ print(sd(synthetic_data))
 hist(synthetic_data, breaks=100)
 ```
 
-
 Summary stats of the variable "Stratification1" in the original data set.
+
 ```{r}
 strat_cat1_summary
 ```
 
-Creating synthetic data for stratificiation1. 
+Creating synthetic data for stratificiation1.
 
 ```{r}
 #Proportions of the stratifications
@@ -157,5 +157,3 @@ strat1_syn_data = sample(x = 1:3, size = 1000, replace = TRUE, prob = proportion
 strat1_syn_data = factor(strat1_syn_data, levels=1:3, labels=c(strat_cat1_summary$Stratification1[1], strat_cat1_summary$Stratification1[2], strat_cat1_summary$Stratification1[3])) #relabeling factors
 table(strat1_syn_data)
 ```
-
-
