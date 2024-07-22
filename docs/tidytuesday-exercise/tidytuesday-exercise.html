@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -168,9 +202,988 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Placeholder file for the future Tidy Tuesday exercise.</p>
+<section id="load-data" class="level3">
+<h3 class="anchored" data-anchor-id="load-data">Load Data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: lattice
+
+Attaching package: 'caret'
+
+The following object is masked from 'package:purrr':
+
+    lift</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching packages ────────────────────────────────────── tidymodels 1.2.0 ──
+✔ broom        1.0.6      ✔ rsample      1.2.1 
+✔ dials        1.2.1      ✔ tune         1.2.1 
+✔ infer        1.0.7      ✔ workflows    1.1.4 
+✔ modeldata    1.4.0      ✔ workflowsets 1.1.0 
+✔ parsnip      1.2.1      ✔ yardstick    1.3.1 
+✔ recipes      1.0.10     
+── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──
+✖ scales::discard()        masks purrr::discard()
+✖ dplyr::filter()          masks stats::filter()
+✖ recipes::fixed()         masks stringr::fixed()
+✖ dplyr::lag()             masks stats::lag()
+✖ caret::lift()            masks purrr::lift()
+✖ yardstick::precision()   masks caret::precision()
+✖ yardstick::recall()      masks caret::recall()
+✖ yardstick::sensitivity() masks caret::sensitivity()
+✖ yardstick::spec()        masks readr::spec()
+✖ yardstick::specificity() masks caret::specificity()
+✖ recipes::step()          masks stats::step()
+• Use suppressPackageStartupMessages() to eliminate package startup messages</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the CSV files</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>ewf_matches <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ewf_matches.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 2298 Columns: 22
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (12): season_id, season, division, match_id, match_name, home_team_id, ...
+dbl   (8): tier, home_team_score, away_team_score, home_team_score_margin, a...
+num   (1): attendance
+date  (1): date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ewf_appearances <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ewf_appearances.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 4596 Columns: 23
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (11): season_id, season, division, match_id, match_name, team_id, team_...
+dbl  (10): tier, home_team, away_team, goals_for, goals_against, goal_differ...
+num   (1): attendance
+date  (1): date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ewf_standings <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ewf_standings.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 258 Columns: 17
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (6): season_id, season, division, team_id, team_name, season_outcome
+dbl (11): tier, position, played, wins, draws, losses, goals_for, goals_agai...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize the datasets</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ewf_matches)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  season_id            season               tier         division        
+ Length:2298        Length:2298        Min.   :1.000   Length:2298       
+ Class :character   Class :character   1st Qu.:1.000   Class :character  
+ Mode  :character   Mode  :character   Median :1.000   Mode  :character  
+                                       Mean   :1.477                     
+                                       3rd Qu.:2.000                     
+                                       Max.   :2.000                     
+                                                                         
+   match_id          match_name             date              attendance   
+ Length:2298        Length:2298        Min.   :2011-04-13   Min.   :  103  
+ Class :character   Class :character   1st Qu.:2016-08-28   1st Qu.:  562  
+ Mode  :character   Mode  :character   Median :2019-10-13   Median : 1062  
+                                       Mean   :2019-05-18   Mean   : 2492  
+                                       3rd Qu.:2022-03-30   3rd Qu.: 2071  
+                                       Max.   :2024-05-18   Max.   :60160  
+                                                            NA's   :1188   
+ home_team_id       home_team_name     away_team_id       away_team_name    
+ Length:2298        Length:2298        Length:2298        Length:2298       
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+    score           home_team_score away_team_score  home_team_score_margin
+ Length:2298        Min.   : 0.00   Min.   : 0.000   Min.   :-12.0000      
+ Class :character   1st Qu.: 0.00   1st Qu.: 0.000   1st Qu.: -1.0000      
+ Mode  :character   Median : 1.00   Median : 1.000   Median :  0.0000      
+                    Mean   : 1.59   Mean   : 1.486   Mean   :  0.1044      
+                    3rd Qu.: 2.00   3rd Qu.: 2.000   3rd Qu.:  1.0000      
+                    Max.   :11.00   Max.   :12.000   Max.   : 10.0000      
+                                                                           
+ away_team_score_margin home_team_win   away_team_win        draw      
+ Min.   :-10.0000       Min.   :0.000   Min.   :0.000   Min.   :0.000  
+ 1st Qu.: -1.0000       1st Qu.:0.000   1st Qu.:0.000   1st Qu.:0.000  
+ Median :  0.0000       Median :0.000   Median :0.000   Median :0.000  
+ Mean   : -0.1044       Mean   :0.436   Mean   :0.386   Mean   :0.178  
+ 3rd Qu.:  1.0000       3rd Qu.:1.000   3rd Qu.:1.000   3rd Qu.:0.000  
+ Max.   : 12.0000       Max.   :1.000   Max.   :1.000   Max.   :1.000  
+                                                                       
+    result              note          
+ Length:2298        Length:2298       
+ Class :character   Class :character  
+ Mode  :character   Mode  :character  
+                                      
+                                      
+                                      
+                                      </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ewf_appearances)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  season_id            season               tier         division        
+ Length:4596        Length:4596        Min.   :1.000   Length:4596       
+ Class :character   Class :character   1st Qu.:1.000   Class :character  
+ Mode  :character   Mode  :character   Median :1.000   Mode  :character  
+                                       Mean   :1.477                     
+                                       3rd Qu.:2.000                     
+                                       Max.   :2.000                     
+                                                                         
+   match_id          match_name             date              attendance   
+ Length:4596        Length:4596        Min.   :2011-04-13   Min.   :  103  
+ Class :character   Class :character   1st Qu.:2016-08-28   1st Qu.:  562  
+ Mode  :character   Mode  :character   Median :2019-10-13   Median : 1062  
+                                       Mean   :2019-05-18   Mean   : 2492  
+                                       3rd Qu.:2022-04-01   3rd Qu.: 2074  
+                                       Max.   :2024-05-18   Max.   :60160  
+                                                            NA's   :2376   
+   team_id           team_name         opponent_id        opponent_name     
+ Length:4596        Length:4596        Length:4596        Length:4596       
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+   home_team     away_team     goals_for      goals_against    goal_difference
+ Min.   :0.0   Min.   :0.0   Min.   : 0.000   Min.   : 0.000   Min.   :-12    
+ 1st Qu.:0.0   1st Qu.:0.0   1st Qu.: 0.000   1st Qu.: 0.000   1st Qu.: -1    
+ Median :0.5   Median :0.5   Median : 1.000   Median : 1.000   Median :  0    
+ Mean   :0.5   Mean   :0.5   Mean   : 1.538   Mean   : 1.538   Mean   :  0    
+ 3rd Qu.:1.0   3rd Qu.:1.0   3rd Qu.: 2.000   3rd Qu.: 2.000   3rd Qu.:  1    
+ Max.   :1.0   Max.   :1.0   Max.   :12.000   Max.   :12.000   Max.   : 12    
+                                                                              
+    result               win             loss            draw      
+ Length:4596        Min.   :0.000   Min.   :0.000   Min.   :0.000  
+ Class :character   1st Qu.:0.000   1st Qu.:0.000   1st Qu.:0.000  
+ Mode  :character   Median :0.000   Median :0.000   Median :0.000  
+                    Mean   :0.411   Mean   :0.411   Mean   :0.178  
+                    3rd Qu.:1.000   3rd Qu.:1.000   3rd Qu.:0.000  
+                    Max.   :1.000   Max.   :1.000   Max.   :1.000  
+                                                                   
+     note               points     
+ Length:4596        Min.   :0.000  
+ Class :character   1st Qu.:0.000  
+ Mode  :character   Median :1.000  
+                    Mean   :1.411  
+                    3rd Qu.:3.000  
+                    Max.   :3.000  
+                                   </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ewf_standings)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  season_id            season               tier         division        
+ Length:258         Length:258         Min.   :1.000   Length:258        
+ Class :character   Class :character   1st Qu.:1.000   Class :character  
+ Mode  :character   Mode  :character   Median :1.000   Mode  :character  
+                                       Mean   :1.461                     
+                                       3rd Qu.:2.000                     
+                                       Max.   :2.000                     
+    position        team_id           team_name             played     
+ Min.   : 1.000   Length:258         Length:258         Min.   : 8.00  
+ 1st Qu.: 3.000   Class :character   Class :character   1st Qu.:14.00  
+ Median : 6.000   Mode  :character   Mode  :character   Median :18.00  
+ Mean   : 5.767                                         Mean   :17.81  
+ 3rd Qu.: 8.000                                         3rd Qu.:22.00  
+ Max.   :12.000                                         Max.   :22.00  
+      wins            draws           losses         goals_for   
+ Min.   : 0.000   Min.   :0.000   Min.   : 0.000   Min.   : 2.0  
+ 1st Qu.: 4.000   1st Qu.:2.000   1st Qu.: 3.250   1st Qu.:17.0  
+ Median : 6.000   Median :3.000   Median : 7.000   Median :24.0  
+ Mean   : 7.322   Mean   :3.171   Mean   : 7.322   Mean   :27.4  
+ 3rd Qu.:11.000   3rd Qu.:4.000   3rd Qu.:10.000   3rd Qu.:35.0  
+ Max.   :19.000   Max.   :9.000   Max.   :19.000   Max.   :98.0  
+ goals_against   goal_difference     points      point_adjustment  
+ Min.   : 3.00   Min.   :-59     Min.   :-3.00   Min.   :-10.0000  
+ 1st Qu.:16.00   1st Qu.:-16     1st Qu.:15.00   1st Qu.:  0.0000  
+ Median :25.00   Median : -3     Median :23.00   Median :  0.0000  
+ Mean   :27.40   Mean   :  0     Mean   :25.03   Mean   : -0.1047  
+ 3rd Qu.:37.75   3rd Qu.: 15     3rd Qu.:34.75   3rd Qu.:  0.0000  
+ Max.   :75.00   Max.   : 91     Max.   :58.00   Max.   :  0.0000  
+ season_outcome    
+ Length:258        
+ Class :character  
+ Mode  :character  
+                   
+                   
+                   </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of matches per season</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>matches_per_season <span class="ot">&lt;-</span> ewf_matches <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(season) <span class="sc">%&gt;%</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_matches =</span> <span class="fu">n</span>())</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the number of matches per season</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(matches_per_season, <span class="fu">aes</span>(<span class="at">x =</span> season, <span class="at">y =</span> total_matches)) <span class="sc">+</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Number of Matches per Season"</span>, <span class="at">x =</span> <span class="st">"Season"</span>, <span class="at">y =</span> <span class="st">"Total Matches"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tidytuesday-exercise_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Average attendance per season</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>average_attendance <span class="ot">&lt;-</span> ewf_matches <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">attendance =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">""</span>, attendance))) <span class="sc">%&gt;%</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(season) <span class="sc">%&gt;%</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">average_attendance =</span> <span class="fu">mean</span>(attendance, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the average attendance per season</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(average_attendance, <span class="fu">aes</span>(<span class="at">x =</span> season, <span class="at">y =</span> average_attendance)) <span class="sc">+</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Average Attendance per Season"</span>, <span class="at">x =</span> <span class="st">"Season"</span>, <span class="at">y =</span> <span class="st">"Average Attendance"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 row containing missing values or values outside the scale range
+(`geom_line()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_line()`: Each group consists of only one observation.
+ℹ Do you need to adjust the group aesthetic?</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 row containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tidytuesday-exercise_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of goals scored by each team per season</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>goals_per_team <span class="ot">&lt;-</span> ewf_standings <span class="sc">%&gt;%</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(season, team_name) <span class="sc">%&gt;%</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_goals =</span> <span class="fu">sum</span>(goals_for))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'season'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the goals scored by each team per season</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(goals_per_team, <span class="fu">aes</span>(<span class="at">x =</span> team_name, <span class="at">y =</span> total_goals, <span class="at">fill =</span> season)) <span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Goals Scored by Each Team per Season"</span>, <span class="at">x =</span> <span class="st">"Team"</span>, <span class="at">y =</span> <span class="st">"Total Goals"</span>) <span class="sc">+</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tidytuesday-exercise_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribution of match results</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>match_results <span class="ot">&lt;-</span> ewf_matches <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(result) <span class="sc">%&gt;%</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>())</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the distribution of match results</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(match_results, <span class="fu">aes</span>(<span class="at">x =</span> result, <span class="at">y =</span> count, <span class="at">fill =</span> result)) <span class="sc">+</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of Match Results"</span>, <span class="at">x =</span> <span class="st">"Result"</span>, <span class="at">y =</span> <span class="st">"Count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tidytuesday-exercise_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the plots to files</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"matches_per_season.png"</span>, <span class="at">plot =</span> <span class="fu">last_plot</span>(), <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">5</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"average_attendance_per_season.png"</span>, <span class="at">plot =</span> <span class="fu">last_plot</span>(), <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">5</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"goals_per_team.png"</span>, <span class="at">plot =</span> <span class="fu">last_plot</span>(), <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">5</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"match_results_distribution.png"</span>, <span class="at">plot =</span> <span class="fu">last_plot</span>(), <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">5</span>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the summaries and head of each dataset</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Summary of ewf_matches:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Summary of ewf_matches:"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">summary</span>(ewf_matches))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  season_id            season               tier         division        
+ Length:2298        Length:2298        Min.   :1.000   Length:2298       
+ Class :character   Class :character   1st Qu.:1.000   Class :character  
+ Mode  :character   Mode  :character   Median :1.000   Mode  :character  
+                                       Mean   :1.477                     
+                                       3rd Qu.:2.000                     
+                                       Max.   :2.000                     
+                                                                         
+   match_id          match_name             date              attendance   
+ Length:2298        Length:2298        Min.   :2011-04-13   Min.   :  103  
+ Class :character   Class :character   1st Qu.:2016-08-28   1st Qu.:  562  
+ Mode  :character   Mode  :character   Median :2019-10-13   Median : 1062  
+                                       Mean   :2019-05-18   Mean   : 2492  
+                                       3rd Qu.:2022-03-30   3rd Qu.: 2071  
+                                       Max.   :2024-05-18   Max.   :60160  
+                                                            NA's   :1188   
+ home_team_id       home_team_name     away_team_id       away_team_name    
+ Length:2298        Length:2298        Length:2298        Length:2298       
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+    score           home_team_score away_team_score  home_team_score_margin
+ Length:2298        Min.   : 0.00   Min.   : 0.000   Min.   :-12.0000      
+ Class :character   1st Qu.: 0.00   1st Qu.: 0.000   1st Qu.: -1.0000      
+ Mode  :character   Median : 1.00   Median : 1.000   Median :  0.0000      
+                    Mean   : 1.59   Mean   : 1.486   Mean   :  0.1044      
+                    3rd Qu.: 2.00   3rd Qu.: 2.000   3rd Qu.:  1.0000      
+                    Max.   :11.00   Max.   :12.000   Max.   : 10.0000      
+                                                                           
+ away_team_score_margin home_team_win   away_team_win        draw      
+ Min.   :-10.0000       Min.   :0.000   Min.   :0.000   Min.   :0.000  
+ 1st Qu.: -1.0000       1st Qu.:0.000   1st Qu.:0.000   1st Qu.:0.000  
+ Median :  0.0000       Median :0.000   Median :0.000   Median :0.000  
+ Mean   : -0.1044       Mean   :0.436   Mean   :0.386   Mean   :0.178  
+ 3rd Qu.:  1.0000       3rd Qu.:1.000   3rd Qu.:1.000   3rd Qu.:0.000  
+ Max.   : 12.0000       Max.   :1.000   Max.   :1.000   Max.   :1.000  
+                                                                       
+    result              note          
+ Length:2298        Length:2298       
+ Class :character   Class :character  
+ Mode  :character   Mode  :character  
+                                      
+                                      
+                                      
+                                      </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Summary of ewf_appearances:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Summary of ewf_appearances:"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">summary</span>(ewf_appearances))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  season_id            season               tier         division        
+ Length:4596        Length:4596        Min.   :1.000   Length:4596       
+ Class :character   Class :character   1st Qu.:1.000   Class :character  
+ Mode  :character   Mode  :character   Median :1.000   Mode  :character  
+                                       Mean   :1.477                     
+                                       3rd Qu.:2.000                     
+                                       Max.   :2.000                     
+                                                                         
+   match_id          match_name             date              attendance   
+ Length:4596        Length:4596        Min.   :2011-04-13   Min.   :  103  
+ Class :character   Class :character   1st Qu.:2016-08-28   1st Qu.:  562  
+ Mode  :character   Mode  :character   Median :2019-10-13   Median : 1062  
+                                       Mean   :2019-05-18   Mean   : 2492  
+                                       3rd Qu.:2022-04-01   3rd Qu.: 2074  
+                                       Max.   :2024-05-18   Max.   :60160  
+                                                            NA's   :2376   
+   team_id           team_name         opponent_id        opponent_name     
+ Length:4596        Length:4596        Length:4596        Length:4596       
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+   home_team     away_team     goals_for      goals_against    goal_difference
+ Min.   :0.0   Min.   :0.0   Min.   : 0.000   Min.   : 0.000   Min.   :-12    
+ 1st Qu.:0.0   1st Qu.:0.0   1st Qu.: 0.000   1st Qu.: 0.000   1st Qu.: -1    
+ Median :0.5   Median :0.5   Median : 1.000   Median : 1.000   Median :  0    
+ Mean   :0.5   Mean   :0.5   Mean   : 1.538   Mean   : 1.538   Mean   :  0    
+ 3rd Qu.:1.0   3rd Qu.:1.0   3rd Qu.: 2.000   3rd Qu.: 2.000   3rd Qu.:  1    
+ Max.   :1.0   Max.   :1.0   Max.   :12.000   Max.   :12.000   Max.   : 12    
+                                                                              
+    result               win             loss            draw      
+ Length:4596        Min.   :0.000   Min.   :0.000   Min.   :0.000  
+ Class :character   1st Qu.:0.000   1st Qu.:0.000   1st Qu.:0.000  
+ Mode  :character   Median :0.000   Median :0.000   Median :0.000  
+                    Mean   :0.411   Mean   :0.411   Mean   :0.178  
+                    3rd Qu.:1.000   3rd Qu.:1.000   3rd Qu.:0.000  
+                    Max.   :1.000   Max.   :1.000   Max.   :1.000  
+                                                                   
+     note               points     
+ Length:4596        Min.   :0.000  
+ Class :character   1st Qu.:0.000  
+ Mode  :character   Median :1.000  
+                    Mean   :1.411  
+                    3rd Qu.:3.000  
+                    Max.   :3.000  
+                                   </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Summary of ewf_standings:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Summary of ewf_standings:"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">summary</span>(ewf_standings))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  season_id            season               tier         division        
+ Length:258         Length:258         Min.   :1.000   Length:258        
+ Class :character   Class :character   1st Qu.:1.000   Class :character  
+ Mode  :character   Mode  :character   Median :1.000   Mode  :character  
+                                       Mean   :1.461                     
+                                       3rd Qu.:2.000                     
+                                       Max.   :2.000                     
+    position        team_id           team_name             played     
+ Min.   : 1.000   Length:258         Length:258         Min.   : 8.00  
+ 1st Qu.: 3.000   Class :character   Class :character   1st Qu.:14.00  
+ Median : 6.000   Mode  :character   Mode  :character   Median :18.00  
+ Mean   : 5.767                                         Mean   :17.81  
+ 3rd Qu.: 8.000                                         3rd Qu.:22.00  
+ Max.   :12.000                                         Max.   :22.00  
+      wins            draws           losses         goals_for   
+ Min.   : 0.000   Min.   :0.000   Min.   : 0.000   Min.   : 2.0  
+ 1st Qu.: 4.000   1st Qu.:2.000   1st Qu.: 3.250   1st Qu.:17.0  
+ Median : 6.000   Median :3.000   Median : 7.000   Median :24.0  
+ Mean   : 7.322   Mean   :3.171   Mean   : 7.322   Mean   :27.4  
+ 3rd Qu.:11.000   3rd Qu.:4.000   3rd Qu.:10.000   3rd Qu.:35.0  
+ Max.   :19.000   Max.   :9.000   Max.   :19.000   Max.   :98.0  
+ goals_against   goal_difference     points      point_adjustment  
+ Min.   : 3.00   Min.   :-59     Min.   :-3.00   Min.   :-10.0000  
+ 1st Qu.:16.00   1st Qu.:-16     1st Qu.:15.00   1st Qu.:  0.0000  
+ Median :25.00   Median : -3     Median :23.00   Median :  0.0000  
+ Mean   :27.40   Mean   :  0     Mean   :25.03   Mean   : -0.1047  
+ 3rd Qu.:37.75   3rd Qu.: 15     3rd Qu.:34.75   3rd Qu.:  0.0000  
+ Max.   :75.00   Max.   : 91     Max.   :58.00   Max.   :  0.0000  
+ season_outcome    
+ Length:258        
+ Class :character  
+ Mode  :character  
+                   
+                   
+                   </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Head of ewf_matches:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Head of ewf_matches:"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">head</span>(ewf_matches))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 22
+  season_id      season  tier division match_id match_name date       attendance
+  &lt;chr&gt;          &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;      &lt;date&gt;          &lt;dbl&gt;
+1 S-2011-2011-1… 2011-…     1 FA Wome… M-2011-… Chelsea L… 2011-04-13       2510
+2 S-2011-2011-1… 2011-…     1 FA Wome… M-2011-… Lincoln L… 2011-04-13        742
+3 S-2011-2011-1… 2011-…     1 FA Wome… M-2011-… Birmingha… 2011-04-14        602
+4 S-2011-2011-1… 2011-…     1 FA Wome… M-2011-… Liverpool… 2011-04-14        835
+5 S-2011-2011-1… 2011-…     1 FA Wome… M-2011-… Everton L… 2011-04-20        220
+6 S-2011-2011-1… 2011-…     1 FA Wome… M-2011-… Liverpool… 2011-04-20        341
+# ℹ 14 more variables: home_team_id &lt;chr&gt;, home_team_name &lt;chr&gt;,
+#   away_team_id &lt;chr&gt;, away_team_name &lt;chr&gt;, score &lt;chr&gt;,
+#   home_team_score &lt;dbl&gt;, away_team_score &lt;dbl&gt;, home_team_score_margin &lt;dbl&gt;,
+#   away_team_score_margin &lt;dbl&gt;, home_team_win &lt;dbl&gt;, away_team_win &lt;dbl&gt;,
+#   draw &lt;dbl&gt;, result &lt;chr&gt;, note &lt;chr&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Head of ewf_appearances:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Head of ewf_appearances:"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">head</span>(ewf_appearances))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 23
+  season_id      season  tier division match_id match_name date       attendance
+  &lt;chr&gt;          &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;      &lt;date&gt;          &lt;dbl&gt;
+1 S-2011-2011-1… 2011-…     1 FA Wome… M-2011-… Chelsea L… 2011-04-13       2510
+2 S-2011-2011-1… 2011-…     1 FA Wome… M-2011-… Chelsea L… 2011-04-13       2510
+3 S-2011-2011-1… 2011-…     1 FA Wome… M-2011-… Lincoln L… 2011-04-13        742
+4 S-2011-2011-1… 2011-…     1 FA Wome… M-2011-… Lincoln L… 2011-04-13        742
+5 S-2011-2011-1… 2011-…     1 FA Wome… M-2011-… Birmingha… 2011-04-14        602
+6 S-2011-2011-1… 2011-…     1 FA Wome… M-2011-… Birmingha… 2011-04-14        602
+# ℹ 15 more variables: team_id &lt;chr&gt;, team_name &lt;chr&gt;, opponent_id &lt;chr&gt;,
+#   opponent_name &lt;chr&gt;, home_team &lt;dbl&gt;, away_team &lt;dbl&gt;, goals_for &lt;dbl&gt;,
+#   goals_against &lt;dbl&gt;, goal_difference &lt;dbl&gt;, result &lt;chr&gt;, win &lt;dbl&gt;,
+#   loss &lt;dbl&gt;, draw &lt;dbl&gt;, note &lt;chr&gt;, points &lt;dbl&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Head of ewf_standings:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Head of ewf_standings:"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">head</span>(ewf_standings))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 17
+  season_id  season  tier division position team_id team_name played  wins draws
+  &lt;chr&gt;      &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 S-2011-20… 2011-…     1 FA Wome…        1 T-001-T Arsenal …     14    10     2
+2 S-2011-20… 2011-…     1 FA Wome…        2 T-003-T Birmingh…     14     8     5
+3 S-2011-20… 2011-…     1 FA Wome…        3 T-013-T Everton …     14     7     4
+4 S-2011-20… 2011-…     1 FA Wome…        4 T-016-T Lincoln …     14     6     3
+5 S-2011-20… 2011-…     1 FA Wome…        5 T-006-T Bristol …     14     4     4
+6 S-2011-20… 2011-…     1 FA Wome…        6 T-008-T Chelsea …     14     4     3
+# ℹ 7 more variables: losses &lt;dbl&gt;, goals_for &lt;dbl&gt;, goals_against &lt;dbl&gt;,
+#   goal_difference &lt;dbl&gt;, points &lt;dbl&gt;, point_adjustment &lt;dbl&gt;,
+#   season_outcome &lt;chr&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="question" class="level3">
+<h3 class="anchored" data-anchor-id="question">Question:</h3>
+<p>How has team performance evolved over the seasons in the Women’s Super League?</p>
+</section>
+<section id="hypothesis" class="level3">
+<h3 class="anchored" data-anchor-id="hypothesis">Hypothesis:</h3>
+<p>Teams that have higher average attendance tend to perform better in terms of points and goal difference.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Data Preparation</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>ewf_matches <span class="ot">&lt;-</span> ewf_matches <span class="sc">%&gt;%</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">attendance =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">""</span>, attendance))) <span class="sc">%&gt;%</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(season, home_team_id) <span class="sc">%&gt;%</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">avg_attendance =</span> <span class="fu">mean</span>(attendance, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">'drop'</span>)</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge datasets</span></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>team_performance <span class="ot">&lt;-</span> ewf_standings <span class="sc">%&gt;%</span></span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(ewf_matches, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"season"</span>, <span class="st">"team_id"</span> <span class="ot">=</span> <span class="st">"home_team_id"</span>))</span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Handle missing values</span></span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a>team_performance <span class="ot">&lt;-</span> team_performance <span class="sc">%&gt;%</span></span>
+<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">avg_attendance =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(avg_attendance), <span class="fu">mean</span>(avg_attendance, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), avg_attendance))</span>
+<span id="cb52-14"><a href="#cb52-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-15"><a href="#cb52-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Select relevant columns and convert data types if necessary</span></span>
+<span id="cb52-16"><a href="#cb52-16" aria-hidden="true" tabindex="-1"></a>team_performance <span class="ot">&lt;-</span> team_performance <span class="sc">%&gt;%</span></span>
+<span id="cb52-17"><a href="#cb52-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(season, team_name, points, goals_for, goals_against, wins, losses, draws, avg_attendance)</span>
+<span id="cb52-18"><a href="#cb52-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-19"><a href="#cb52-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Splitting the data into training and test sets</span></span>
+<span id="cb52-20"><a href="#cb52-20" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)  <span class="co"># For reproducibility</span></span>
+<span id="cb52-21"><a href="#cb52-21" aria-hidden="true" tabindex="-1"></a>train_index <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(team_performance<span class="sc">$</span>points, <span class="at">p =</span> <span class="fl">0.7</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb52-22"><a href="#cb52-22" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> team_performance[train_index, ]</span>
+<span id="cb52-23"><a href="#cb52-23" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> team_performance[<span class="sc">-</span>train_index, ]</span>
+<span id="cb52-24"><a href="#cb52-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-25"><a href="#cb52-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up the resampling</span></span>
+<span id="cb52-26"><a href="#cb52-26" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb52-27"><a href="#cb52-27" aria-hidden="true" tabindex="-1"></a>cv_folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(train_data, <span class="at">v =</span> <span class="dv">5</span>)</span>
+<span id="cb52-28"><a href="#cb52-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-29"><a href="#cb52-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Define Models</span></span>
+<span id="cb52-30"><a href="#cb52-30" aria-hidden="true" tabindex="-1"></a>linear_reg_model <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb52-31"><a href="#cb52-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb52-32"><a href="#cb52-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb52-33"><a href="#cb52-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-34"><a href="#cb52-34" aria-hidden="true" tabindex="-1"></a>rf_model <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb52-35"><a href="#cb52-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"ranger"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb52-36"><a href="#cb52-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb52-37"><a href="#cb52-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-38"><a href="#cb52-38" aria-hidden="true" tabindex="-1"></a>svm_model <span class="ot">&lt;-</span> <span class="fu">svm_rbf</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb52-39"><a href="#cb52-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"kernlab"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb52-40"><a href="#cb52-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb52-41"><a href="#cb52-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-42"><a href="#cb52-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Create Recipe</span></span>
+<span id="cb52-43"><a href="#cb52-43" aria-hidden="true" tabindex="-1"></a>team_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(points <span class="sc">~</span> goals_for <span class="sc">+</span> goals_against <span class="sc">+</span> wins <span class="sc">+</span> losses <span class="sc">+</span> draws <span class="sc">+</span> avg_attendance, <span class="at">data =</span> train_data) <span class="sc">%&gt;%</span></span>
+<span id="cb52-44"><a href="#cb52-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_predictors</span>())</span>
+<span id="cb52-45"><a href="#cb52-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-46"><a href="#cb52-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up Workflows</span></span>
+<span id="cb52-47"><a href="#cb52-47" aria-hidden="true" tabindex="-1"></a>linear_reg_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb52-48"><a href="#cb52-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(linear_reg_model) <span class="sc">%&gt;%</span></span>
+<span id="cb52-49"><a href="#cb52-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(team_recipe)</span>
+<span id="cb52-50"><a href="#cb52-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-51"><a href="#cb52-51" aria-hidden="true" tabindex="-1"></a>rf_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb52-52"><a href="#cb52-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(rf_model) <span class="sc">%&gt;%</span></span>
+<span id="cb52-53"><a href="#cb52-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(team_recipe)</span>
+<span id="cb52-54"><a href="#cb52-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-55"><a href="#cb52-55" aria-hidden="true" tabindex="-1"></a>svm_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb52-56"><a href="#cb52-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(svm_model) <span class="sc">%&gt;%</span></span>
+<span id="cb52-57"><a href="#cb52-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(team_recipe)</span>
+<span id="cb52-58"><a href="#cb52-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-59"><a href="#cb52-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Train Models Using Cross-Validation</span></span>
+<span id="cb52-60"><a href="#cb52-60" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb52-61"><a href="#cb52-61" aria-hidden="true" tabindex="-1"></a>linear_reg_results <span class="ot">&lt;-</span> <span class="fu">fit_resamples</span>(</span>
+<span id="cb52-62"><a href="#cb52-62" aria-hidden="true" tabindex="-1"></a>  linear_reg_workflow,</span>
+<span id="cb52-63"><a href="#cb52-63" aria-hidden="true" tabindex="-1"></a>  <span class="at">resamples =</span> cv_folds,</span>
+<span id="cb52-64"><a href="#cb52-64" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(rmse, rsq)</span>
+<span id="cb52-65"><a href="#cb52-65" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb52-66"><a href="#cb52-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-67"><a href="#cb52-67" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb52-68"><a href="#cb52-68" aria-hidden="true" tabindex="-1"></a>rf_results <span class="ot">&lt;-</span> <span class="fu">fit_resamples</span>(</span>
+<span id="cb52-69"><a href="#cb52-69" aria-hidden="true" tabindex="-1"></a>  rf_workflow,</span>
+<span id="cb52-70"><a href="#cb52-70" aria-hidden="true" tabindex="-1"></a>  <span class="at">resamples =</span> cv_folds,</span>
+<span id="cb52-71"><a href="#cb52-71" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(rmse, rsq)</span>
+<span id="cb52-72"><a href="#cb52-72" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb52-73"><a href="#cb52-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-74"><a href="#cb52-74" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb52-75"><a href="#cb52-75" aria-hidden="true" tabindex="-1"></a>svm_results <span class="ot">&lt;-</span> <span class="fu">fit_resamples</span>(</span>
+<span id="cb52-76"><a href="#cb52-76" aria-hidden="true" tabindex="-1"></a>  svm_workflow,</span>
+<span id="cb52-77"><a href="#cb52-77" aria-hidden="true" tabindex="-1"></a>  <span class="at">resamples =</span> cv_folds,</span>
+<span id="cb52-78"><a href="#cb52-78" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(rmse, rsq)</span>
+<span id="cb52-79"><a href="#cb52-79" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb52-80"><a href="#cb52-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-81"><a href="#cb52-81" aria-hidden="true" tabindex="-1"></a><span class="co"># Collect and Print Metrics</span></span>
+<span id="cb52-82"><a href="#cb52-82" aria-hidden="true" tabindex="-1"></a>linear_reg_metrics <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(linear_reg_results)</span>
+<span id="cb52-83"><a href="#cb52-83" aria-hidden="true" tabindex="-1"></a>rf_metrics <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(rf_results)</span>
+<span id="cb52-84"><a href="#cb52-84" aria-hidden="true" tabindex="-1"></a>svm_metrics <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(svm_results)</span>
+<span id="cb52-85"><a href="#cb52-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-86"><a href="#cb52-86" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Linear Regression Metrics"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Linear Regression Metrics"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(linear_reg_metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 6
+  .metric .estimator  mean     n std_err .config             
+  &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               
+1 rmse    standard   0.935     5 0.319   Preprocessor1_Model1
+2 rsq     standard   0.992     5 0.00443 Preprocessor1_Model1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Random Forest Metrics"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Random Forest Metrics"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(rf_metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 6
+  .metric .estimator  mean     n std_err .config             
+  &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               
+1 rmse    standard   2.44      5 0.127   Preprocessor1_Model1
+2 rsq     standard   0.970     5 0.00429 Preprocessor1_Model1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"SVM Metrics"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "SVM Metrics"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(svm_metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 6
+  .metric .estimator  mean     n std_err .config             
+  &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               
+1 rmse    standard   3.87      5  0.793  Preprocessor1_Model1
+2 rsq     standard   0.915     5  0.0269 Preprocessor1_Model1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize Residuals and Predictions</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>plot_residuals <span class="ot">&lt;-</span> <span class="cf">function</span>(results, title) {</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_predictions</span>(results) <span class="sc">%&gt;%</span></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> .pred, <span class="at">y =</span> .pred <span class="sc">-</span> points)) <span class="sc">+</span></span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> title, <span class="at">x =</span> <span class="st">"Predicted"</span>, <span class="at">y =</span> <span class="st">"Residuals"</span>) <span class="sc">+</span></span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to plot residuals</span></span>
+<span id="cb64-12"><a href="#cb64-12" aria-hidden="true" tabindex="-1"></a>plot_residuals <span class="ot">&lt;-</span> <span class="cf">function</span>(results, title) {</span>
+<span id="cb64-13"><a href="#cb64-13" aria-hidden="true" tabindex="-1"></a>  results <span class="sc">%&gt;%</span></span>
+<span id="cb64-14"><a href="#cb64-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">collect_predictions</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb64-15"><a href="#cb64-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> .pred, <span class="at">y =</span> .pred <span class="sc">-</span> points)) <span class="sc">+</span></span>
+<span id="cb64-16"><a href="#cb64-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb64-17"><a href="#cb64-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb64-18"><a href="#cb64-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> title, <span class="at">x =</span> <span class="st">"Predicted"</span>, <span class="at">y =</span> <span class="st">"Residuals"</span>) <span class="sc">+</span></span>
+<span id="cb64-19"><a href="#cb64-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb64-20"><a href="#cb64-20" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="model-fitting" class="level3">
+<h3 class="anchored" data-anchor-id="model-fitting">Model Fitting</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear Regression Model</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>linear_reg_model <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Random Forest Model</span></span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>rf_model <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"ranger"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Support Vector Machine Model</span></span>
+<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a>svm_model <span class="ot">&lt;-</span> <span class="fu">svm_rbf</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb65-13"><a href="#cb65-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"kernlab"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb65-14"><a href="#cb65-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb65-15"><a href="#cb65-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Recipe for preprocessing</span></span>
+<span id="cb65-16"><a href="#cb65-16" aria-hidden="true" tabindex="-1"></a>team_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(points <span class="sc">~</span> goals_for <span class="sc">+</span> goals_against <span class="sc">+</span> wins <span class="sc">+</span> losses <span class="sc">+</span> draws <span class="sc">+</span> avg_attendance, <span class="at">data =</span> train_data) <span class="sc">%&gt;%</span></span>
+<span id="cb65-17"><a href="#cb65-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_predictors</span>())</span>
+<span id="cb65-18"><a href="#cb65-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up workflows</span></span>
+<span id="cb65-19"><a href="#cb65-19" aria-hidden="true" tabindex="-1"></a>linear_reg_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb65-20"><a href="#cb65-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(linear_reg_model) <span class="sc">%&gt;%</span></span>
+<span id="cb65-21"><a href="#cb65-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(team_recipe)</span>
+<span id="cb65-22"><a href="#cb65-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-23"><a href="#cb65-23" aria-hidden="true" tabindex="-1"></a>rf_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb65-24"><a href="#cb65-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(rf_model) <span class="sc">%&gt;%</span></span>
+<span id="cb65-25"><a href="#cb65-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(team_recipe)</span>
+<span id="cb65-26"><a href="#cb65-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-27"><a href="#cb65-27" aria-hidden="true" tabindex="-1"></a>svm_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb65-28"><a href="#cb65-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(svm_model) <span class="sc">%&gt;%</span></span>
+<span id="cb65-29"><a href="#cb65-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(team_recipe)</span>
+<span id="cb65-30"><a href="#cb65-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Train and evaluate Linear Regression Model</span></span>
+<span id="cb65-31"><a href="#cb65-31" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb65-32"><a href="#cb65-32" aria-hidden="true" tabindex="-1"></a>linear_reg_results <span class="ot">&lt;-</span> <span class="fu">fit_resamples</span>(</span>
+<span id="cb65-33"><a href="#cb65-33" aria-hidden="true" tabindex="-1"></a>  linear_reg_workflow,</span>
+<span id="cb65-34"><a href="#cb65-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">resamples =</span> cv_folds,</span>
+<span id="cb65-35"><a href="#cb65-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(rmse, rsq)</span>
+<span id="cb65-36"><a href="#cb65-36" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb65-37"><a href="#cb65-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-38"><a href="#cb65-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Train and evaluate Random Forest Model</span></span>
+<span id="cb65-39"><a href="#cb65-39" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb65-40"><a href="#cb65-40" aria-hidden="true" tabindex="-1"></a>rf_results <span class="ot">&lt;-</span> <span class="fu">fit_resamples</span>(</span>
+<span id="cb65-41"><a href="#cb65-41" aria-hidden="true" tabindex="-1"></a>  rf_workflow,</span>
+<span id="cb65-42"><a href="#cb65-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">resamples =</span> cv_folds,</span>
+<span id="cb65-43"><a href="#cb65-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(rmse, rsq)</span>
+<span id="cb65-44"><a href="#cb65-44" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb65-45"><a href="#cb65-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-46"><a href="#cb65-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Train and evaluate SVM Model</span></span>
+<span id="cb65-47"><a href="#cb65-47" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb65-48"><a href="#cb65-48" aria-hidden="true" tabindex="-1"></a>svm_results <span class="ot">&lt;-</span> <span class="fu">fit_resamples</span>(</span>
+<span id="cb65-49"><a href="#cb65-49" aria-hidden="true" tabindex="-1"></a>  svm_workflow,</span>
+<span id="cb65-50"><a href="#cb65-50" aria-hidden="true" tabindex="-1"></a>  <span class="at">resamples =</span> cv_folds,</span>
+<span id="cb65-51"><a href="#cb65-51" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(rmse, rsq)</span>
+<span id="cb65-52"><a href="#cb65-52" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb65-53"><a href="#cb65-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Collect metrics</span></span>
+<span id="cb65-54"><a href="#cb65-54" aria-hidden="true" tabindex="-1"></a>linear_reg_metrics <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(linear_reg_results)</span>
+<span id="cb65-55"><a href="#cb65-55" aria-hidden="true" tabindex="-1"></a>rf_metrics <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(rf_results)</span>
+<span id="cb65-56"><a href="#cb65-56" aria-hidden="true" tabindex="-1"></a>svm_metrics <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(svm_results)</span>
+<span id="cb65-57"><a href="#cb65-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-58"><a href="#cb65-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Print metrics</span></span>
+<span id="cb65-59"><a href="#cb65-59" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Linear Regression Metrics"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Linear Regression Metrics"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(linear_reg_metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 6
+  .metric .estimator  mean     n std_err .config             
+  &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               
+1 rmse    standard   0.935     5 0.319   Preprocessor1_Model1
+2 rsq     standard   0.992     5 0.00443 Preprocessor1_Model1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Random Forest Metrics"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Random Forest Metrics"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(rf_metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 6
+  .metric .estimator  mean     n std_err .config             
+  &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               
+1 rmse    standard   2.44      5 0.127   Preprocessor1_Model1
+2 rsq     standard   0.970     5 0.00429 Preprocessor1_Model1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"SVM Metrics"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "SVM Metrics"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(svm_metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 6
+  .metric .estimator  mean     n std_err .config             
+  &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               
+1 rmse    standard   3.87      5  0.793  Preprocessor1_Model1
+2 rsq     standard   0.915     5  0.0269 Preprocessor1_Model1</code></pre>
+</div>
+</div>
+</section>
+<section id="model-selection" class="level3">
+<h3 class="anchored" data-anchor-id="model-selection">Model Selection</h3>
+<p>While the Linear Regression model has the best performance in terms of both RMSE and R-squared, the choice of the best model should also consider factors beyond just performance metrics. Here’s a detailed rationale for selecting the best model:</p>
+</section>
+<section id="linear-regression" class="level3">
+<h3 class="anchored" data-anchor-id="linear-regression">Linear Regression</h3>
+<section id="pros" class="level4">
+<h4 class="anchored" data-anchor-id="pros">Pros:</h4>
+<ol type="1">
+<li><p><strong>Performance</strong>: The Linear Regression model has the lowest RMSE and the highest R-squared, indicating it has the best predictive performance among the three models.</p></li>
+<li><p><strong>Interpretability</strong>: Linear Regression is highly interpretable, allowing for clear insights into how each predictor variable affects the outcome. This is crucial for understanding the factors that contribute to team performance in women’s football.</p></li>
+<li><p><strong>Simplicity</strong>: Linear Regression is simple and computationally efficient, making it easy to implement and understand.</p></li>
+</ol>
+</section>
+<section id="cons" class="level4">
+<h4 class="anchored" data-anchor-id="cons">Cons:</h4>
+<ol type="1">
+<li><strong>Assumptions</strong>: Linear Regression relies on several assumptions (linearity, homoscedasticity, independence, and normality of residuals), which might not always hold true in real-world data.</li>
+</ol>
+</section>
+</section>
+<section id="random-forest" class="level3">
+<h3 class="anchored" data-anchor-id="random-forest">Random Forest</h3>
+<section id="pros-1" class="level4">
+<h4 class="anchored" data-anchor-id="pros-1">Pros:</h4>
+<ol type="1">
+<li><p><strong>Performance</strong>: The Random Forest model also performs well, with a reasonably low RMSE and a high R-squared. It handles non-linear relationships and interactions between variables better than Linear Regression.</p></li>
+<li><p><strong>Robustness</strong>: Random Forest is robust to outliers and can handle a large number of predictors and complex interactions.</p></li>
+</ol>
+</section>
+<section id="cons-1" class="level4">
+<h4 class="anchored" data-anchor-id="cons-1">Cons:</h4>
+<ol type="1">
+<li><p><strong>Interpretability</strong>: Random Forest models are less interpretable compared to Linear Regression. Understanding the contribution of each predictor to the outcome can be more challenging.</p></li>
+<li><p><strong>Computational Cost</strong>: Random Forests are more computationally intensive, especially with a large number of trees.</p></li>
+</ol>
+</section>
+</section>
+<section id="support-vector-machine-svm" class="level3">
+<h3 class="anchored" data-anchor-id="support-vector-machine-svm">Support Vector Machine (SVM)</h3>
+<section id="pros-2" class="level4">
+<h4 class="anchored" data-anchor-id="pros-2">Pros:</h4>
+<ol type="1">
+<li><strong>Complex Relationships</strong>: SVMs can capture complex, non-linear relationships between the predictors and the outcome.</li>
+</ol>
+</section>
+<section id="cons-2" class="level4">
+<h4 class="anchored" data-anchor-id="cons-2">Cons:</h4>
+<ol type="1">
+<li><p><strong>Performance</strong>: The SVM model has the highest RMSE and the lowest R-squared among the three models, indicating it performs the worst in terms of predictive accuracy.</p></li>
+<li><p><strong>Interpretability</strong>: SVMs are even less interpretable than Random Forests, making it difficult to understand the model’s decisions.</p></li>
+<li><p><strong>Computational Cost</strong>: SVMs can be computationally expensive, especially with large datasets.</p></li>
+</ol>
+</section>
+</section>
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+<p>Given the above considerations, I would select the <strong>Linear Regression</strong> model as the overall best model. The primary reasons for this choice are its superior performance in terms of RMSE and R-squared, its simplicity, and its high interpretability, which aligns well with the goal of understanding the factors contributing to team performance in women’s football.</p>
+</section>
+<section id="final-model-choice-linear-regression" class="level3">
+<h3 class="anchored" data-anchor-id="final-model-choice-linear-regression">Final Model Choice: Linear Regression</h3>
+<section id="explanation" class="level4">
+<h4 class="anchored" data-anchor-id="explanation">Explanation:</h4>
+<ul>
+<li><p><strong>Performance</strong>: Best predictive performance with the lowest RMSE and highest R-squared.</p></li>
+<li><p><strong>Interpretability</strong>: Allows for clear insights into the effect of each predictor on the outcome.</p></li>
+<li><p><strong>Simplicity</strong>: Easy to implement, understand, and communicate the results.</p></li>
+</ul>
+<p>This choice ensures that the analysis remains transparent and actionable, providing valuable insights into the factors driving team performance while maintaining high predictive accuracy.</p>
+</section>
+</section>
+<section id="test-data-validation" class="level3">
+<h3 class="anchored" data-anchor-id="test-data-validation">Test Data Validation</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the CSV files</span></span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>ewf_matches <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ewf_matches.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 2298 Columns: 22
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (12): season_id, season, division, match_id, match_name, home_team_id, ...
+dbl   (8): tier, home_team_score, away_team_score, home_team_score_margin, a...
+num   (1): attendance
+date  (1): date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>ewf_appearances <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ewf_appearances.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 4596 Columns: 23
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (11): season_id, season, division, match_id, match_name, team_id, team_...
+dbl  (10): tier, home_team, away_team, goals_for, goals_against, goal_differ...
+num   (1): attendance
+date  (1): date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>ewf_standings <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ewf_standings.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 258 Columns: 17
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (6): season_id, season, division, team_id, team_name, season_outcome
+dbl (11): tier, position, played, wins, draws, losses, goals_for, goals_agai...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Data Preparation</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>ewf_matches <span class="ot">&lt;-</span> ewf_matches <span class="sc">%&gt;%</span></span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">attendance =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">""</span>, attendance))) <span class="sc">%&gt;%</span></span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(season, home_team_id) <span class="sc">%&gt;%</span></span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">avg_attendance =</span> <span class="fu">mean</span>(attendance, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">'drop'</span>)</span>
+<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge datasets</span></span>
+<span id="cb83-8"><a href="#cb83-8" aria-hidden="true" tabindex="-1"></a>team_performance <span class="ot">&lt;-</span> ewf_standings <span class="sc">%&gt;%</span></span>
+<span id="cb83-9"><a href="#cb83-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(ewf_matches, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"season"</span>, <span class="st">"team_id"</span> <span class="ot">=</span> <span class="st">"home_team_id"</span>))</span>
+<span id="cb83-10"><a href="#cb83-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-11"><a href="#cb83-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Handle missing values</span></span>
+<span id="cb83-12"><a href="#cb83-12" aria-hidden="true" tabindex="-1"></a>team_performance <span class="ot">&lt;-</span> team_performance <span class="sc">%&gt;%</span></span>
+<span id="cb83-13"><a href="#cb83-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">avg_attendance =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(avg_attendance), <span class="fu">mean</span>(avg_attendance, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), avg_attendance))</span>
+<span id="cb83-14"><a href="#cb83-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-15"><a href="#cb83-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Select relevant columns and convert data types if necessary</span></span>
+<span id="cb83-16"><a href="#cb83-16" aria-hidden="true" tabindex="-1"></a>team_performance <span class="ot">&lt;-</span> team_performance <span class="sc">%&gt;%</span></span>
+<span id="cb83-17"><a href="#cb83-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(season, team_name, points, goals_for, goals_against, wins, losses, draws, avg_attendance)</span>
+<span id="cb83-18"><a href="#cb83-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-19"><a href="#cb83-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Splitting the data into training and test sets</span></span>
+<span id="cb83-20"><a href="#cb83-20" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)  <span class="co"># For reproducibility</span></span>
+<span id="cb83-21"><a href="#cb83-21" aria-hidden="true" tabindex="-1"></a>train_index <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(team_performance<span class="sc">$</span>points, <span class="at">p =</span> <span class="fl">0.7</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb83-22"><a href="#cb83-22" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> team_performance[train_index, ]</span>
+<span id="cb83-23"><a href="#cb83-23" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> team_performance[<span class="sc">-</span>train_index, ]</span>
+<span id="cb83-24"><a href="#cb83-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the Linear Regression Model</span></span>
+<span id="cb83-25"><a href="#cb83-25" aria-hidden="true" tabindex="-1"></a>linear_reg_model <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb83-26"><a href="#cb83-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb83-27"><a href="#cb83-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb83-28"><a href="#cb83-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-29"><a href="#cb83-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Create Recipe</span></span>
+<span id="cb83-30"><a href="#cb83-30" aria-hidden="true" tabindex="-1"></a>team_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(points <span class="sc">~</span> goals_for <span class="sc">+</span> goals_against <span class="sc">+</span> wins <span class="sc">+</span> losses <span class="sc">+</span> draws <span class="sc">+</span> avg_attendance, <span class="at">data =</span> train_data) <span class="sc">%&gt;%</span></span>
+<span id="cb83-31"><a href="#cb83-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_predictors</span>())</span>
+<span id="cb83-32"><a href="#cb83-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-33"><a href="#cb83-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up Workflow</span></span>
+<span id="cb83-34"><a href="#cb83-34" aria-hidden="true" tabindex="-1"></a>linear_reg_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb83-35"><a href="#cb83-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(linear_reg_model) <span class="sc">%&gt;%</span></span>
+<span id="cb83-36"><a href="#cb83-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(team_recipe)</span>
+<span id="cb83-37"><a href="#cb83-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-38"><a href="#cb83-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the Model</span></span>
+<span id="cb83-39"><a href="#cb83-39" aria-hidden="true" tabindex="-1"></a>linear_reg_fit <span class="ot">&lt;-</span> linear_reg_workflow <span class="sc">%&gt;%</span></span>
+<span id="cb83-40"><a href="#cb83-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="at">data =</span> train_data)</span>
+<span id="cb83-41"><a href="#cb83-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Make Predictions on Test Data</span></span>
+<span id="cb83-42"><a href="#cb83-42" aria-hidden="true" tabindex="-1"></a>test_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(linear_reg_fit, <span class="at">new_data =</span> test_data) <span class="sc">%&gt;%</span></span>
+<span id="cb83-43"><a href="#cb83-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(test_data)</span>
+<span id="cb83-44"><a href="#cb83-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-45"><a href="#cb83-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate Model Performance</span></span>
+<span id="cb83-46"><a href="#cb83-46" aria-hidden="true" tabindex="-1"></a>test_metrics <span class="ot">&lt;-</span> test_predictions <span class="sc">%&gt;%</span></span>
+<span id="cb83-47"><a href="#cb83-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> points, <span class="at">estimate =</span> .pred)</span>
+<span id="cb83-48"><a href="#cb83-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-49"><a href="#cb83-49" aria-hidden="true" tabindex="-1"></a><span class="co"># Print Test Metrics</span></span>
+<span id="cb83-50"><a href="#cb83-50" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(test_metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 rmse    standard       0.256
+2 rsq     standard       1.00 
+3 mae     standard       0.208</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot Residuals</span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>test_residuals_plot <span class="ot">&lt;-</span> test_predictions <span class="sc">%&gt;%</span></span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> .pred, <span class="at">y =</span> .pred <span class="sc">-</span> points)) <span class="sc">+</span></span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Linear Regression Residuals on Test Data"</span>, <span class="at">x =</span> <span class="st">"Predicted"</span>, <span class="at">y =</span> <span class="st">"Residuals"</span>) <span class="sc">+</span></span>
+<span id="cb85-7"><a href="#cb85-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb85-8"><a href="#cb85-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-9"><a href="#cb85-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(test_residuals_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tidytuesday-exercise_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

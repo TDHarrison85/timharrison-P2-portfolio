@@ -2,4 +2,437 @@
 title: "Tidy Tuesday Exercise"
 ---
 
-Placeholder file for the future Tidy Tuesday exercise.
+### Load Data
+
+```{r}
+# Load necessary libraries
+library(tidyverse)
+library(caret)
+library(tidymodels)
+library(ggplot2)
+
+# Load the CSV files
+ewf_matches <- read_csv("data/ewf_matches.csv")
+ewf_appearances <- read_csv("data/ewf_appearances.csv")
+ewf_standings <- read_csv("data/ewf_standings.csv")
+
+# Summarize the datasets
+summary(ewf_matches)
+summary(ewf_appearances)
+summary(ewf_standings)
+
+# Number of matches per season
+matches_per_season <- ewf_matches %>%
+  group_by(season) %>%
+  summarise(total_matches = n())
+
+# Plot the number of matches per season
+ggplot(matches_per_season, aes(x = season, y = total_matches)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Number of Matches per Season", x = "Season", y = "Total Matches")
+
+# Average attendance per season
+average_attendance <- ewf_matches %>%
+  mutate(attendance = as.numeric(gsub(",", "", attendance))) %>%
+  group_by(season) %>%
+  summarise(average_attendance = mean(attendance, na.rm = TRUE))
+
+# Plot the average attendance per season
+ggplot(average_attendance, aes(x = season, y = average_attendance)) +
+  geom_line() +
+  geom_point() +
+  theme_minimal() +
+  labs(title = "Average Attendance per Season", x = "Season", y = "Average Attendance")
+
+# Number of goals scored by each team per season
+goals_per_team <- ewf_standings %>%
+  group_by(season, team_name) %>%
+  summarise(total_goals = sum(goals_for))
+
+# Plot the goals scored by each team per season
+ggplot(goals_per_team, aes(x = team_name, y = total_goals, fill = season)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  labs(title = "Goals Scored by Each Team per Season", x = "Team", y = "Total Goals") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+# Distribution of match results
+match_results <- ewf_matches %>%
+  group_by(result) %>%
+  summarise(count = n())
+
+# Plot the distribution of match results
+ggplot(match_results, aes(x = result, y = count, fill = result)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Distribution of Match Results", x = "Result", y = "Count")
+
+# Save the plots to files
+ggsave("matches_per_season.png", plot = last_plot(), width = 8, height = 5)
+ggsave("average_attendance_per_season.png", plot = last_plot(), width = 8, height = 5)
+ggsave("goals_per_team.png", plot = last_plot(), width = 8, height = 5)
+ggsave("match_results_distribution.png", plot = last_plot(), width = 8, height = 5)
+
+# Print the summaries and head of each dataset
+print("Summary of ewf_matches:")
+print(summary(ewf_matches))
+
+print("Summary of ewf_appearances:")
+print(summary(ewf_appearances))
+
+print("Summary of ewf_standings:")
+print(summary(ewf_standings))
+
+print("Head of ewf_matches:")
+print(head(ewf_matches))
+
+print("Head of ewf_appearances:")
+print(head(ewf_appearances))
+
+print("Head of ewf_standings:")
+print(head(ewf_standings))
+
+```
+
+### Question:
+
+How has team performance evolved over the seasons in the Women's Super League?
+
+### Hypothesis:
+
+Teams that have higher average attendance tend to perform better in terms of points and goal difference.
+
+```{r}
+
+
+# Data Preparation
+ewf_matches <- ewf_matches %>%
+  mutate(attendance = as.numeric(gsub(",", "", attendance))) %>%
+  group_by(season, home_team_id) %>%
+  summarise(avg_attendance = mean(attendance, na.rm = TRUE), .groups = 'drop')
+
+# Merge datasets
+team_performance <- ewf_standings %>%
+  left_join(ewf_matches, by = c("season", "team_id" = "home_team_id"))
+
+# Handle missing values
+team_performance <- team_performance %>%
+  mutate(avg_attendance = ifelse(is.na(avg_attendance), mean(avg_attendance, na.rm = TRUE), avg_attendance))
+
+# Select relevant columns and convert data types if necessary
+team_performance <- team_performance %>%
+  select(season, team_name, points, goals_for, goals_against, wins, losses, draws, avg_attendance)
+
+# Splitting the data into training and test sets
+set.seed(123)  # For reproducibility
+train_index <- createDataPartition(team_performance$points, p = 0.7, list = FALSE)
+train_data <- team_performance[train_index, ]
+test_data <- team_performance[-train_index, ]
+
+# Set up the resampling
+set.seed(123)
+cv_folds <- vfold_cv(train_data, v = 5)
+
+# Define Models
+linear_reg_model <- linear_reg() %>%
+  set_engine("lm") %>%
+  set_mode("regression")
+
+rf_model <- rand_forest() %>%
+  set_engine("ranger") %>%
+  set_mode("regression")
+
+svm_model <- svm_rbf() %>%
+  set_engine("kernlab") %>%
+  set_mode("regression")
+
+# Create Recipe
+team_recipe <- recipe(points ~ goals_for + goals_against + wins + losses + draws + avg_attendance, data = train_data) %>%
+  step_normalize(all_predictors())
+
+# Set up Workflows
+linear_reg_workflow <- workflow() %>%
+  add_model(linear_reg_model) %>%
+  add_recipe(team_recipe)
+
+rf_workflow <- workflow() %>%
+  add_model(rf_model) %>%
+  add_recipe(team_recipe)
+
+svm_workflow <- workflow() %>%
+  add_model(svm_model) %>%
+  add_recipe(team_recipe)
+
+# Train Models Using Cross-Validation
+set.seed(123)
+linear_reg_results <- fit_resamples(
+  linear_reg_workflow,
+  resamples = cv_folds,
+  metrics = metric_set(rmse, rsq)
+)
+
+set.seed(123)
+rf_results <- fit_resamples(
+  rf_workflow,
+  resamples = cv_folds,
+  metrics = metric_set(rmse, rsq)
+)
+
+set.seed(123)
+svm_results <- fit_resamples(
+  svm_workflow,
+  resamples = cv_folds,
+  metrics = metric_set(rmse, rsq)
+)
+
+# Collect and Print Metrics
+linear_reg_metrics <- collect_metrics(linear_reg_results)
+rf_metrics <- collect_metrics(rf_results)
+svm_metrics <- collect_metrics(svm_results)
+
+print("Linear Regression Metrics")
+print(linear_reg_metrics)
+
+print("Random Forest Metrics")
+print(rf_metrics)
+
+print("SVM Metrics")
+print(svm_metrics)
+
+# Visualize Residuals and Predictions
+plot_residuals <- function(results, title) {
+  collect_predictions(results) %>%
+    ggplot(aes(x = .pred, y = .pred - points)) +
+    geom_point(alpha = 0.5) +
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    labs(title = title, x = "Predicted", y = "Residuals") +
+    theme_minimal()
+}
+
+# Function to plot residuals
+plot_residuals <- function(results, title) {
+  results %>%
+    collect_predictions() %>%
+    ggplot(aes(x = .pred, y = .pred - points)) +
+    geom_point(alpha = 0.5) +
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    labs(title = title, x = "Predicted", y = "Residuals") +
+    theme_minimal()
+}
+
+
+
+
+```
+
+### Model Fitting
+
+```{r}
+# Linear Regression Model
+linear_reg_model <- linear_reg() %>%
+  set_engine("lm") %>%
+  set_mode("regression")
+
+# Random Forest Model
+rf_model <- rand_forest() %>%
+  set_engine("ranger") %>%
+  set_mode("regression")
+
+# Support Vector Machine Model
+svm_model <- svm_rbf() %>%
+  set_engine("kernlab") %>%
+  set_mode("regression")
+# Recipe for preprocessing
+team_recipe <- recipe(points ~ goals_for + goals_against + wins + losses + draws + avg_attendance, data = train_data) %>%
+  step_normalize(all_predictors())
+# Set up workflows
+linear_reg_workflow <- workflow() %>%
+  add_model(linear_reg_model) %>%
+  add_recipe(team_recipe)
+
+rf_workflow <- workflow() %>%
+  add_model(rf_model) %>%
+  add_recipe(team_recipe)
+
+svm_workflow <- workflow() %>%
+  add_model(svm_model) %>%
+  add_recipe(team_recipe)
+# Train and evaluate Linear Regression Model
+set.seed(123)
+linear_reg_results <- fit_resamples(
+  linear_reg_workflow,
+  resamples = cv_folds,
+  metrics = metric_set(rmse, rsq)
+)
+
+# Train and evaluate Random Forest Model
+set.seed(123)
+rf_results <- fit_resamples(
+  rf_workflow,
+  resamples = cv_folds,
+  metrics = metric_set(rmse, rsq)
+)
+
+# Train and evaluate SVM Model
+set.seed(123)
+svm_results <- fit_resamples(
+  svm_workflow,
+  resamples = cv_folds,
+  metrics = metric_set(rmse, rsq)
+)
+# Collect metrics
+linear_reg_metrics <- collect_metrics(linear_reg_results)
+rf_metrics <- collect_metrics(rf_results)
+svm_metrics <- collect_metrics(svm_results)
+
+# Print metrics
+print("Linear Regression Metrics")
+print(linear_reg_metrics)
+
+print("Random Forest Metrics")
+print(rf_metrics)
+
+print("SVM Metrics")
+print(svm_metrics)
+
+
+```
+
+### Model Selection
+
+While the Linear Regression model has the best performance in terms of both RMSE and R-squared, the choice of the best model should also consider factors beyond just performance metrics. Here’s a detailed rationale for selecting the best model:
+
+### Linear Regression
+
+#### Pros:
+
+1.  **Performance**: The Linear Regression model has the lowest RMSE and the highest R-squared, indicating it has the best predictive performance among the three models.
+
+2.  **Interpretability**: Linear Regression is highly interpretable, allowing for clear insights into how each predictor variable affects the outcome. This is crucial for understanding the factors that contribute to team performance in women's football.
+
+3.  **Simplicity**: Linear Regression is simple and computationally efficient, making it easy to implement and understand.
+
+#### Cons:
+
+1.  **Assumptions**: Linear Regression relies on several assumptions (linearity, homoscedasticity, independence, and normality of residuals), which might not always hold true in real-world data.
+
+### Random Forest
+
+#### Pros:
+
+1.  **Performance**: The Random Forest model also performs well, with a reasonably low RMSE and a high R-squared. It handles non-linear relationships and interactions between variables better than Linear Regression.
+
+2.  **Robustness**: Random Forest is robust to outliers and can handle a large number of predictors and complex interactions.
+
+#### Cons:
+
+1.  **Interpretability**: Random Forest models are less interpretable compared to Linear Regression. Understanding the contribution of each predictor to the outcome can be more challenging.
+
+2.  **Computational Cost**: Random Forests are more computationally intensive, especially with a large number of trees.
+
+### Support Vector Machine (SVM)
+
+#### Pros:
+
+1.  **Complex Relationships**: SVMs can capture complex, non-linear relationships between the predictors and the outcome.
+
+#### Cons:
+
+1.  **Performance**: The SVM model has the highest RMSE and the lowest R-squared among the three models, indicating it performs the worst in terms of predictive accuracy.
+
+2.  **Interpretability**: SVMs are even less interpretable than Random Forests, making it difficult to understand the model's decisions.
+
+3.  **Computational Cost**: SVMs can be computationally expensive, especially with large datasets.
+
+### Conclusion
+
+Given the above considerations, I would select the **Linear Regression** model as the overall best model. The primary reasons for this choice are its superior performance in terms of RMSE and R-squared, its simplicity, and its high interpretability, which aligns well with the goal of understanding the factors contributing to team performance in women's football.
+
+### Final Model Choice: Linear Regression
+
+#### Explanation:
+
+-   **Performance**: Best predictive performance with the lowest RMSE and highest R-squared.
+
+-   **Interpretability**: Allows for clear insights into the effect of each predictor on the outcome.
+
+-   **Simplicity**: Easy to implement, understand, and communicate the results.
+
+This choice ensures that the analysis remains transparent and actionable, providing valuable insights into the factors driving team performance while maintaining high predictive accuracy.
+
+### Test Data Validation
+
+```{r}
+# Load necessary libraries
+library(tidyverse)
+library(tidymodels)
+
+# Load the CSV files
+ewf_matches <- read_csv("data/ewf_matches.csv")
+ewf_appearances <- read_csv("data/ewf_appearances.csv")
+ewf_standings <- read_csv("data/ewf_standings.csv")
+
+# Data Preparation
+ewf_matches <- ewf_matches %>%
+  mutate(attendance = as.numeric(gsub(",", "", attendance))) %>%
+  group_by(season, home_team_id) %>%
+  summarise(avg_attendance = mean(attendance, na.rm = TRUE), .groups = 'drop')
+
+# Merge datasets
+team_performance <- ewf_standings %>%
+  left_join(ewf_matches, by = c("season", "team_id" = "home_team_id"))
+
+# Handle missing values
+team_performance <- team_performance %>%
+  mutate(avg_attendance = ifelse(is.na(avg_attendance), mean(avg_attendance, na.rm = TRUE), avg_attendance))
+
+# Select relevant columns and convert data types if necessary
+team_performance <- team_performance %>%
+  select(season, team_name, points, goals_for, goals_against, wins, losses, draws, avg_attendance)
+
+# Splitting the data into training and test sets
+set.seed(123)  # For reproducibility
+train_index <- createDataPartition(team_performance$points, p = 0.7, list = FALSE)
+train_data <- team_performance[train_index, ]
+test_data <- team_performance[-train_index, ]
+# Define the Linear Regression Model
+linear_reg_model <- linear_reg() %>%
+  set_engine("lm") %>%
+  set_mode("regression")
+
+# Create Recipe
+team_recipe <- recipe(points ~ goals_for + goals_against + wins + losses + draws + avg_attendance, data = train_data) %>%
+  step_normalize(all_predictors())
+
+# Set up Workflow
+linear_reg_workflow <- workflow() %>%
+  add_model(linear_reg_model) %>%
+  add_recipe(team_recipe)
+
+# Fit the Model
+linear_reg_fit <- linear_reg_workflow %>%
+  fit(data = train_data)
+# Make Predictions on Test Data
+test_predictions <- predict(linear_reg_fit, new_data = test_data) %>%
+  bind_cols(test_data)
+
+# Evaluate Model Performance
+test_metrics <- test_predictions %>%
+  metrics(truth = points, estimate = .pred)
+
+# Print Test Metrics
+print(test_metrics)
+
+# Plot Residuals
+test_residuals_plot <- test_predictions %>%
+  ggplot(aes(x = .pred, y = .pred - points)) +
+  geom_point(alpha = 0.5) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(title = "Linear Regression Residuals on Test Data", x = "Predicted", y = "Residuals") +
+  theme_minimal()
+
+print(test_residuals_plot)
+
+
+```
