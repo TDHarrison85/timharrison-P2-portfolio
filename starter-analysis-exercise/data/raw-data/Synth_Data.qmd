@@ -62,59 +62,5 @@ write_csv(df, "synthetic_financial_data_recreated.csv")
 # Output the first few rows of the dataframe to verify
 print(head(df))
 
-# Load the data for analysis
-data_path <- "synthetic_financial_data_recreated.csv"
-df <- read_csv(data_path)
-
-# Clean the data (example: handle missing values)
-df_clean <- df %>%
-  mutate(
-    `Years Since Bankruptcy` = replace_na(`Years Since Bankruptcy`, 0),
-    `Debt Write-off` = as.numeric(`Debt Write-off` > 0)  # Convert to binary for logistic regression
-  )
-
-# Summary statistics
-summary_stats <- df_clean %>%
-  summarize(
-    avg_fico = mean(`FICO Score`, na.rm = TRUE),
-    avg_income = mean(`Gross Monthly Income ($)`, na.rm = TRUE),
-    avg_obligations = mean(`Current Credit Obligations ($)`, na.rm = TRUE)
-)
-
-print(summary_stats)
-
-# Create histograms for FICO Score, Current Credit Obligations, and Gross Monthly Income
-fico_hist <- ggplot(df_clean, aes(x = `FICO Score`)) + 
-  geom_histogram(binwidth = 10) + 
-  ggtitle("FICO Score Distribution")
-
-income_hist <- ggplot(df_clean, aes(x = `Gross Monthly Income ($)`)) + 
-  geom_histogram(binwidth = 100) + 
-  ggtitle("Gross Monthly Income Distribution")
-
-obligations_hist <- ggplot(df_clean, aes(x = `Current Credit Obligations ($)`)) + 
-  geom_histogram(binwidth = 500) + 
-  ggtitle("Current Credit Obligations Distribution")
-
-# Save histograms
-ggsave("fico_hist.png", plot = fico_hist)
-ggsave("income_hist.png", plot = income_hist)
-ggsave("obligations_hist.png", plot = obligations_hist)
-
-# Display histograms
-print(fico_hist)
-print(income_hist)
-print(obligations_hist)
-
-# Linear regression model (for illustrative purposes, although Debt Write-off is binary)
-lm_model <- linear_reg() %>%
-  set_engine("lm") %>%
-  fit(`Debt Write-off` ~ `FICO Score` + `Gross Monthly Income ($)` + `Current Credit Obligations ($)`, data = df_clean)
-
-# Display linear model summary
-lm_summary <- summary(lm_model$fit)
-print(lm_summary)
-
-
 
 ```
