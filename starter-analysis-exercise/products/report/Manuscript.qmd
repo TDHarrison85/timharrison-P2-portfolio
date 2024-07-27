@@ -34,11 +34,9 @@ In recent years, there has been a growing interest in combining these external c
 
 The integration of multiple data sources for creditworthiness assessment not only enhances the predictive accuracy but also provides a competitive advantage in the financial industry. This project aims to explore the potential of combining Experian credit data with bank-specific information to develop a more comprehensive method for assessing customer creditworthiness. Through synthetic data creation and advanced statistical analyses, we seek to demonstrate the benefits and feasibility of this integrated approach.
 
-
 ## Description of data and data source
 
-To conduct this analysis, I will generate synthetic data using artificial intelligence software. The dataset will include attributes typically found in Experian credit reports, such as FICO scores and credit history details, along with additional customer attributes accessible through bank records, such as account balances and transaction histories. This approach allows for a more comprehensive dataset that mimics real-world scenarios. The .qmd file responsible for creating this synthetic data can be found here. [here](https://tdharrison85.github.io/timharrison-P2-portfolio/starter-analysis-exercise/products/report/Synth_Data.html).
-
+To conduct this analysis, I will generate synthetic data using artificial intelligence software. The dataset will include attributes typically found in Experian credit reports, such as FICO scores and credit history details, along with additional customer attributes accessible through bank records, such as account balances and transaction histories. This approach allows for a more comprehensive dataset that mimics real-world scenarios. The .qmd file responsible for creating this synthetic data can be found under the Synthetic Data tab of the Project Menu.
 
 ## Questions/Hypotheses to be addressed
 
@@ -102,16 +100,17 @@ The data will be synthetically created with AI. I will use summary statistics to
 
 ## Basic statistical analysis
 
-```{r, echo=FALSE, message=FALSE}
+```{r}
 # Load necessary libraries
 library(tidyverse)
 library(tidymodels)
-
+library(here)
+library(cluster)  # For clustering
+library(factoextra)  # For visualizing clusters
 
 # Load the data
-data_path <- here("starter-analysis-exercise","data", "raw-data", "synthetic_financial_data_recreated.csv")
+data_path <- here("starter-analysis-exercise", "data", "raw-data", "synthetic_financial_data_recreated.csv")
 df <- read_csv(data_path)
-
 
 # Summary statistics
 summary_stats <- df %>%
@@ -121,7 +120,7 @@ summary_stats <- df %>%
     avg_obligations = mean(`Current Credit Obligations ($)`, na.rm = TRUE)
 )
 
-#print(summary_stats)
+print(summary_stats)
 
 # Create histograms for FICO Score, Current Credit Obligations, and Gross Monthly Income
 fico_hist <- ggplot(df, aes(x = `FICO Score`)) + 
@@ -136,13 +135,193 @@ obligations_hist <- ggplot(df, aes(x = `Current Credit Obligations ($)`)) +
   geom_histogram(binwidth = 500) + 
   ggtitle("Current Credit Obligations Distribution")
 
-
-
 # Display histograms
 print(fico_hist)
 print(income_hist)
 print(obligations_hist)
 
+# Rename columns to simpler names
+df_clean <- df %>%
+  rename(
+    fico_score = `FICO Score`,
+    monthly_income = `Gross Monthly Income ($)`,
+    credit_obligations = `Current Credit Obligations ($)`,
+    debt_write_off = `Debt Write-off`,
+    bnpl_3m = `BNPL Usage 3m`,
+    bnpl_6m = `BNPL Usage 6m`,
+    bnpl_9m = `BNPL Usage 9m`,
+    bnpl_12m = `BNPL Usage 12m`
+  )
+
+# Ensure the dependent variable is a factor
+df_clean <- df_clean %>%
+  mutate(debt_write_off = factor(debt_write_off, levels = c(0, 1)))
+
+# Check the structure of df_clean
+str(df_clean)
+
+# Analysis 1: Clustering with FICO score, current credit obligations, and payment timeliness
+
+# Select relevant columns for clustering
+df_clustering_1 <- df_clean %>%
+  select(fico_score, credit_obligations, `Payment Timeliness 30+`, `Payment Timeliness 60+`, `Payment Timeliness 90+`)
+
+# Determine the optimal number of clusters using the elbow method
+set.seed(123)
+fviz_nbclust(df_clustering_1, kmeans, method = "wss")
+
+# Apply K-means clustering with the chosen number of clusters (3)
+set.seed(123)
+kmeans_result_1 <- kmeans(df_clustering_1, centers = 3, nstart = 25)
+
+# Add the cluster assignments to the original data
+df_clean$cluster_1 <- as.factor(kmeans_result_1$cluster)
+
+# Visualize the clusters
+fviz_cluster(kmeans_result_1, data = df_clustering_1, geom = "point") +
+  ggtitle("Customer Segments (FICO, Obligations, Payment Timeliness)")
+
+# Print cluster centroids
+print(kmeans_result_1$centers)
+
+# Compute summary statistics for each cluster
+cluster_summary_1 <- df_clean %>%
+  group_by(cluster_1) %>%
+  summarize(
+    avg_fico = mean(fico_score),
+    avg_obligations = mean(credit_obligations),
+    avg_payment_30 = mean(`Payment Timeliness 30+`),
+    avg_payment_60 = mean(`Payment Timeliness 60+`),
+    avg_payment_90 = mean(`Payment Timeliness 90+`),
+    count = n()
+  )
+
+print(cluster_summary_1)
+
+# Boxplots for FICO Score by cluster
+ggplot(df_clean, aes(x = cluster_1, y = fico_score)) +
+  geom_boxplot() +
+  ggtitle("FICO Score Distribution by Cluster (FICO, Obligations, Payment Timeliness)")
+
+# Boxplots for Current Credit Obligations by cluster
+ggplot(df_clean, aes(x = cluster_1, y = credit_obligations)) +
+  geom_boxplot() +
+  ggtitle("Credit Obligations Distribution by Cluster (FICO, Obligations, Payment Timeliness)")
+
+# Boxplots for Payment Timeliness 30+ by cluster
+ggplot(df_clean, aes(x = cluster_1, y = `Payment Timeliness 30+`)) +
+  geom_boxplot() +
+  ggtitle("Payment Timeliness 30+ Distribution by Cluster (FICO, Obligations, Payment Timeliness)")
+
+# Boxplots for Payment Timeliness 60+ by cluster
+ggplot(df_clean, aes(x = cluster_1, y = `Payment Timeliness 60+`)) +
+  geom_boxplot() +
+  ggtitle("Payment Timeliness 60+ Distribution by Cluster (FICO, Obligations, Payment Timeliness)")
+
+# Boxplots for Payment Timeliness 90+ by cluster
+ggplot(df_clean, aes(x = cluster_1, y = `Payment Timeliness 90+`)) +
+  geom_boxplot() +
+  ggtitle("Payment Timeliness 90+ Distribution by Cluster (FICO, Obligations, Payment Timeliness)")
+
+# Cluster Interpretation
+cluster_summary_1 %>%
+  mutate(
+    interpretation = case_when(
+      cluster_1 == 1 ~ "High FICO score, low credit obligations, good payment timeliness",
+      cluster_1 == 2 ~ "Moderate FICO score, moderate credit obligations, mixed payment timeliness",
+      cluster_1 == 3 ~ "Low FICO score, high credit obligations, poor payment timeliness",
+      TRUE ~ "Other"
+    )
+  )
+
+# Analysis 2: Clustering with BNPL usage variables included
+
+# Select relevant columns for clustering, including BNPL usage
+df_clustering_2 <- df_clean %>%
+  select(fico_score, credit_obligations, `Payment Timeliness 30+`, `Payment Timeliness 60+`, `Payment Timeliness 90+`, bnpl_3m, bnpl_6m, bnpl_9m, bnpl_12m)
+
+# Determine the optimal number of clusters using the elbow method
+set.seed(123)
+fviz_nbclust(df_clustering_2, kmeans, method = "wss")
+
+# Apply K-means clustering with the chosen number of clusters (6)
+set.seed(123)
+kmeans_result_2 <- kmeans(df_clustering_2, centers = 6, nstart = 25)
+
+# Add the cluster assignments to the original data
+df_clean$cluster_2 <- as.factor(kmeans_result_2$cluster)
+
+# Visualize the clusters
+fviz_cluster(kmeans_result_2, data = df_clustering_2, geom = "point") +
+  ggtitle("Customer Segments (FICO, Obligations, Payment Timeliness, BNPL Usage)")
+
+# Print cluster centroids
+print(kmeans_result_2$centers)
+
+# Compute summary statistics for each cluster
+cluster_summary_2 <- df_clean %>%
+  group_by(cluster_2) %>%
+  summarize(
+    avg_fico = mean(fico_score),
+    avg_obligations = mean(credit_obligations),
+    avg_payment_30 = mean(`Payment Timeliness 30+`),
+    avg_payment_60 = mean(`Payment Timeliness 60+`),
+    avg_payment_90 = mean(`Payment Timeliness 90+`),
+    avg_bnpl_3m = mean(bnpl_3m),
+    avg_bnpl_6m = mean(bnpl_6m),
+    avg_bnpl_9m = mean(bnpl_9m),
+    avg_bnpl_12m = mean(bnpl_12m),
+    count = n()
+  )
+
+print(cluster_summary_2)
+
+# Boxplots for BNPL Usage by cluster
+ggplot(df_clean, aes(x = cluster_2, y = bnpl_3m)) +
+  geom_boxplot() +
+  ggtitle("BNPL Usage 3m Distribution by Cluster (FICO, Obligations, Payment Timeliness, BNPL Usage)")
+
+ggplot(df_clean, aes(x = cluster_2, y = bnpl_6m)) +
+  geom_boxplot() +
+  ggtitle("BNPL Usage 6m Distribution by Cluster (FICO, Obligations, Payment Timeliness, BNPL Usage)")
+
+ggplot(df_clean, aes(x = cluster_2, y = bnpl_9m)) +
+  geom_boxplot() +
+  ggtitle("BNPL Usage 9m Distribution by Cluster (FICO, Obligations, Payment Timeliness, BNPL Usage)")
+
+ggplot(df_clean, aes(x = cluster_2, y = bnpl_12m)) +
+  geom_boxplot() +
+  ggtitle("BNPL Usage 12m Distribution by Cluster (FICO, Obligations, Payment Timeliness, BNPL Usage)")
+
+# Cluster Interpretation
+cluster_summary_2 %>%
+  mutate(
+    interpretation = case_when(
+      cluster_2 == 1 ~ "Low BNPL usage, good credit profile",
+      cluster_2 == 2 ~ "Moderate BNPL usage, moderate credit profile",
+      cluster_2 == 3 ~ "High BNPL usage, poor credit profile",
+      cluster_2 == 4 ~ "High BNPL usage, good credit profile",
+      cluster_2 == 5 ~ "Moderate BNPL usage, mixed credit profile",
+      cluster_2 == 6 ~ "Low BNPL usage, mixed credit profile",
+      TRUE ~ "Other"
+    )
+  )
+
+# Logistic regression model using clusters as a predictor
+logistic_model <- logistic_reg() %>%
+  set_engine("glm") %>%
+  fit(debt_write_off ~ cluster_1 + cluster_2, data = df_clean)
+
+# Display logistic model summary
+logistic_summary <- summary(logistic_model$fit)
+print(logistic_summary)
+
+```
+
+```{}
+```
+
+```{}
 ```
 
 <!-- _To get some further insight into your data, if reasonable you could compute simple statistics (e.g. simple models with 1 predictor) to look for associations between your outcome(s) and each individual predictor variable. Though note that unless you pre-specified the outcome and main exposure, any "p<0.05 means statistical significance" interpretation is not valid._ -->

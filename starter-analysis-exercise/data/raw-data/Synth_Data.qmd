@@ -22,10 +22,10 @@ df <- tibble(
   `Customer Tenure (years)` = rpois(n, lambda = 5),
   `Deposit Balance ($)` = pmax(rnorm(n, mean = 5000, sd = 2000), 0),
   `Gross Monthly Income ($)` = round(pmax(rnorm(n, mean = 3000, sd = 1000), 0), 2),
-  `BNPL Usage 3m` = pmin(rpois(n, lambda = 0.5), 10),
-  `BNPL Usage 6m` = pmin(rpois(n, lambda = 0.7), 10),
-  `BNPL Usage 9m` = pmin(rpois(n, lambda = 0.9), 10),
-  `BNPL Usage 12m` = pmin(rpois(n, lambda = 1.1), 10),
+  `BNPL Usage 3m` = 0,
+  `BNPL Usage 6m` = 0,
+  `BNPL Usage 9m` = 0,
+  `BNPL Usage 12m` = 0,
   `Overdraft History` = pmin(rpois(n, lambda = 0.5), 10),
   `FICO Score` = pmin(pmax(rnorm(n, mean = 700, sd = 50), 300), 850),
   `Current Credit Obligations ($)` = pmax(rnorm(n, mean = 10000, sd = 5000), 0),
@@ -39,7 +39,7 @@ df <- tibble(
   `Open Credit Accounts` = sample(1:10, n, replace = TRUE)
 )
 
-# Adjust Payment Timeliness based on dependencies
+# Adjust Payment Timeliness and FICO Score based on dependencies
 for (i in 1:n) {
   if (!is.na(df$`Years Since Bankruptcy`[i]) && df$`Years Since Bankruptcy`[i] < 1) {
     df$`FICO Score`[i] <- sample(300:600, 1)
@@ -47,13 +47,32 @@ for (i in 1:n) {
     df$`FICO Score`[i] <- sample(600:700, 1)
   }
   
-  df$`Payment Timeliness 90+`[i] <- pmin(rpois(1, lambda = 0.05), 10)
-  df$`Payment Timeliness 60+`[i] <- df$`Payment Timeliness 90+`[i] + pmin(rpois(1, lambda = 0.05), 10 - df$`Payment Timeliness 90+`[i])
-  df$`Payment Timeliness 30+`[i] <- df$`Payment Timeliness 60+`[i] + pmin(rpois(1, lambda = 0.1), 10 - df$`Payment Timeliness 60+`[i])
-  df$`Debt Write-off`[i] <- df$`Payment Timeliness 90+`[i]
+  df$`Payment Timeliness 90+`[i] <- pmin(rpois(1, lambda = 0.2), 10)
+  df$`Payment Timeliness 60+`[i] <- df$`Payment Timeliness 90+`[i] + pmin(rpois(1, lambda = 0.3), 10 - df$`Payment Timeliness 90+`[i])
+  df$`Payment Timeliness 30+`[i] <- df$`Payment Timeliness 60+`[i] + pmin(rpois(1, lambda = 0.5), 10 - df$`Payment Timeliness 60+`[i])
+  df$`Debt Write-off`[i] <- df$`Payment Timeliness 90+`[i] > 0
+  
+  # Adjust FICO Score based on Payment Timeliness
+  df$`FICO Score`[i] <- df$`FICO Score`[i] - (df$`Payment Timeliness 30+`[i] * 10 + df$`Payment Timeliness 60+`[i] * 7 + df$`Payment Timeliness 90+`[i] * 5)
+  df$`FICO Score`[i] <- max(300, df$`FICO Score`[i])  # Ensure FICO score is at least 300
   
   # Adjust Current Credit Obligations to be the sum of open credit accounts
-  df$`Current Credit Obligations ($)`[i] <- sum(rnorm(df$`Open Credit Accounts`[i], mean = 1000, sd = 500))
+  df$`Current Credit Obligations ($)`[i] <- sum(rnorm(df$`Open Credit Accounts`[i], mean = 2000, sd = 1000))
+}
+
+# Introduce dependencies for BNPL Usage to create additional clusters
+for (i in 1:n) {
+  if (df$`FICO Score`[i] < 600) {
+    df$`BNPL Usage 3m`[i] <- pmin(rpois(1, lambda = 3), 10)
+    df$`BNPL Usage 6m`[i] <- pmin(rpois(1, lambda = 3.5), 10)
+    df$`BNPL Usage 9m`[i] <- pmin(rpois(1, lambda = 4), 10)
+    df$`BNPL Usage 12m`[i] <- pmin(rpois(1, lambda = 4.5), 10)
+  } else if (df$`FICO Score`[i] > 700 && df$`Current Credit Obligations ($)`[i] < 5000) {
+    df$`BNPL Usage 3m`[i] <- pmin(rpois(1, lambda = 0.5), 10)
+    df$`BNPL Usage 6m`[i] <- pmin(rpois(1, lambda = 0.6), 10)
+    df$`BNPL Usage 9m`[i] <- pmin(rpois(1, lambda = 0.7), 10)
+    df$`BNPL Usage 12m`[i] <- pmin(rpois(1, lambda = 0.8), 10)
+  }
 }
 
 # Save the generated data to CSV
